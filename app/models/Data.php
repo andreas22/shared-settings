@@ -24,7 +24,7 @@ class Data extends Eloquent {
 
     public function applications()
     {
-        return $this->belongsToMany('ApiUser');
+        return $this->belongsToMany('ApiUser', 'apiuser_data', 'apiuser_id', 'data_id');
     }
 
     public function createdBy()

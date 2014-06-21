@@ -46,11 +46,6 @@ class SharedsettingsCreateInitialSettingsScheme extends Migration {
             $table->increments('id');
             $table->integer('apiuser_id')->unsigned();
             $table->integer('data_id')->unsigned();
-            $table->dateTime('created_at');
-            $table->dateTime('updated_at');
-            $table->integer('created_by')->unsigned();
-            $table->integer('modified_by')->unsigned();
-            $table->softDeletes();
         });
 
         Schema::table('data', function($table)
@@ -69,8 +64,6 @@ class SharedsettingsCreateInitialSettingsScheme extends Migration {
         {
             $table->foreign('apiuser_id')->references('id')->on('apiusers');
             $table->foreign('data_id')->references('id')->on('data');
-            $table->foreign('created_by')->references('id')->on('users');
-            $table->foreign('modified_by')->references('id')->on('users');
         });
     }
 

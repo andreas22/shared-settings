@@ -45,9 +45,9 @@
                                       <h6>{{$d->updated_at}}</h6>
                                   </td>
                                   <td>
-                                      <a href="{{ route('sharedsettings.apiuser.view', array('id' => $d->id)) }}"><i class="fa fa-bars fa-2x"></i></a>
-                                      <a href="{{ route('sharedsettings.apiuser.edit', array('id' => $d->id)) }}" style="margin: 2px 5px"><i class="fa fa-pencil-square-o fa-2x"></i></a>
-                                      <a href="{{ route('sharedsettings.apiuser.delete', array('id' => $d->id)) }}" class="delete"><i class="fa fa-trash-o fa-2x"></i></a>
+                                      <a href="{{ URL::route('sharedsettings.apiuser.view', array('id' => $d->id)) }}"><i class="fa fa-bars fa-2x"></i></a>
+                                      <a href="{{ URL::route('sharedsettings.apiuser.edit', array('id' => $d->id)) }}" style="margin: 2px 5px"><i class="fa fa-pencil-square-o fa-2x"></i></a>
+                                      <a href="{{ URL::route('sharedsettings.apiuser.delete', array('id' => $d->id)) }}"class="delete"><i class="fa fa-trash-o fa-2x"></i></a>
                                   </td>
                               </tr>
                           </tbody>

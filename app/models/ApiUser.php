@@ -25,7 +25,7 @@ class ApiUser extends \Eloquent {
 
     public function data()
     {
-        return $this->belongsToMany('Data');
+        return $this->belongsToMany('Data', 'apiuser_data', 'apiuser_id', 'data_id');
     }
 
     public function createdBy()

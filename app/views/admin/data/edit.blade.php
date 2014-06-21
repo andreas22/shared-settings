@@ -70,11 +70,8 @@
                 {{ Form::close() }}
             </div>
             <div class="col-md-4">
-
-                <p>
-                    <h3>Shortcut keys</h3>
-                    The editor supports shortcut keys for all available actions. The editor can be used by just a keyboard. The following short cut keys are available:
-                </p>
+                <h3 style="margin-top: 0;">Shortcut keys</h3>
+                The editor supports shortcut keys for all available actions. The editor can be used by just a keyboard. The following short cut keys are available:
                 <table class="table-bordered">
                     <thead>
                         <tr style="font-weight: bold">

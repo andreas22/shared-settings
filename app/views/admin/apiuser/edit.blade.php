@@ -11,7 +11,7 @@
     </div>
     <div class="panel-body">
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-6">
                 <?php $message = Session::get('message'); ?>
                 @if( isset($message) )
                 <div class="alert alert-success">{{$message}}</div>
@@ -60,13 +60,31 @@
                         {{ Form::label('address', 'Address') }}
                         <div class="controls">
                             {{ Form::text('address', $apiuser->address, array('id' => 'address', 'style' => 'width: 100%', 'placeholder' => ' The ip address that will access API')) }}
-                            <h6><small>Example: 192.168.0.1 or 192.168.0.1,192.168.0.2 or 192.168.0.1-192.168.0.255</small></h6>
+                            <h6>
+                                <small>Example:
+                                    <ul>
+                                        <li>Single: 192.168.0.1</li>
+                                        <li>List (comma separated): 192.168.0.1,192.168.0.2</li>
+                                        <li>Range (from-to): 192.168.0.1-192.168.0.255</li>
+                                        <li>Any (with asterisk): *</li>
+                                    </ul>
+                                </small>
+                            </h6>
                         </div>
                     </div>
 
                     {{ Form::submit('Save', array('class'=>'btn btn-info', 'id' => 'save')) }}
                     <a href="{{ URL::route('sharedsettings.apiuser.list') }}" class="btn btn-info">Return</a>
                 {{ Form::close() }}
+            </div>
+            <div class="col-md-6 col-xs-12">
+                <h4>
+                    <i class="fa fa-unlock"></i> Data Permissions
+                    <br />
+                    <small>Assign to API User which data can access</small>
+                </h4>
+                {{-- permissions --}}
+                @include('admin.apiuser.perm')
             </div>
         </div>
     </div>

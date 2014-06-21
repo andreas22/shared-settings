@@ -45,7 +45,25 @@ class AdminApiUsersController extends BaseController {
     public function edit($id = 0)
     {
         $apiuser = $id ? ApiUser::find($id) : new ApiUser();
-        return View::make('admin.apiuser.edit', array('apiuser' => $apiuser))->with('sidebar_items', $this->sidebar);
+        $permission_values_tmp = array();
+        $permission_values = Data::all();
+        $user_data_codes = array();
+
+        foreach($apiuser->data as $v)
+        {
+            $user_data_codes[] = $v->code;
+        }
+
+        foreach($permission_values as $v)
+        {
+            if(!in_array($v->code, $user_data_codes))
+                $permission_values_tmp[$v->id] = sprintf('[%s] %s', $v->code, $v->title);
+        }
+
+        return View::make('admin.apiuser.edit', array('apiuser' => $apiuser,
+                                                      'permission_values' => $permission_values_tmp,
+                                                      'user_acl' => $apiuser->data))
+            ->with('sidebar_items', $this->sidebar);
     }
 
     /**
@@ -125,5 +143,33 @@ class AdminApiUsersController extends BaseController {
         $result = ApiUser::destroy($id);
         $message = ($result) ? 'Deleted successfully' : 'Failed to delete';
         return Redirect::route('sharedsettings.apiuser.list')->with('message', $message);
+    }
+
+    /**
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function permissionsSave()
+    {
+        $message = '';
+        $api_user_id = Input::get('api_user_id');
+        $data_id = Input::get('data_id');
+        $apiUser = ApiUser::find($api_user_id);
+
+        switch(Input::get('operation'))
+        {
+            //Delete
+            case 0:
+                $apiUser->data()->detach($data_id);
+                $message = 'Permission deleted successfully';
+                break;
+
+            //Add
+            case 1:
+                $apiUser->data()->attach($data_id);
+                $message = 'Permission added successfully';
+                break;
+        }
+
+        return Redirect::route('sharedsettings.apiuser.edit', array('id' => $api_user_id))->with('message', $message);
     }
 }

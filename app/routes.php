@@ -35,5 +35,5 @@ Route::group(array( 'prefix' => 'admin/sharedsettings',
     Route::get('apiuser/edit/{id}', array('as' => 'sharedsettings.apiuser.edit', 'uses' => 'AdminApiUsersController@edit'));
     Route::post('apiuser/save', array("before" => "csrf", 'as' => 'sharedsettings.apiuser.save', 'uses' => 'AdminApiUsersController@save'));
     Route::get('apiuser/delete/{id}', array('as' => 'sharedsettings.apiuser.delete', 'uses' => 'AdminApiUsersController@delete'));
-
+    Route::post('apiuser/permissions/save', array("before" => "csrf", 'as' => 'sharedsettings.apiuser.permissions.save', 'uses' => 'AdminApiUsersController@permissionsSave'));
 });
