@@ -48,9 +48,9 @@ return [
                 ],
                 [
                     "name" => "Data",
-                    "route" => "data",
+                    "route" => "sharedsettings",
                     "link" => URL::route('sharedsettings.data.list'),
-                    "permissions" => ["_sharedsettings-data"],
+                    "permissions" => ["_superadmin", "_sharedsettings-data"]
                 ],
       ]
 ];
