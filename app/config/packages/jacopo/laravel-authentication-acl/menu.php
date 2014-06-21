@@ -50,7 +50,7 @@ return [
                     "name" => "Data",
                     "route" => "sharedsettings",
                     "link" => URL::route('sharedsettings.data.list'),
-                    "permissions" => ["_superadmin", "_sharedsettings-data"]
+                    "permissions" => ["_superadmin"]
                 ],
       ]
 ];
