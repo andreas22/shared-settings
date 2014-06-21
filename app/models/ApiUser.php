@@ -1,6 +1,18 @@
 <?php
 
+use Illuminate\Database\Eloquent\SoftDeletingTrait;
+
 class ApiUser extends \Eloquent {
+
+    public static $rules = array(
+        'username' => 'required',
+        'secret' => 'required',
+        'address' => 'required'
+    );
+
+    use SoftDeletingTrait;
+
+    protected $dates = ['deleted_at'];
 
 	/**
 	 * The database table used by the model.
@@ -9,11 +21,11 @@ class ApiUser extends \Eloquent {
 	 */
 	protected $table = 'apiusers';
 
-    protected $fillable = array('name', 'callback_url', 'address', 'modified_by', 'created_by');
+    protected $fillable = array('username', 'secret', 'description', 'callback_url', 'address', 'modified_by', 'created_by');
 
-    public function settings()
+    public function data()
     {
-        return $this->belongsToMany('Setting');
+        return $this->belongsToMany('Data');
     }
 
     public function createdBy()

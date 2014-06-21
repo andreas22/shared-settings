@@ -1,6 +1,6 @@
 <div class="panel panel-info">
     <div class="panel-heading">
-        <h3 class="panel-title bariol-thin"><i class="fa fa-list"></i> Data List</h3>
+        <h3 class="panel-title bariol-thin"><i class="fa fa-users"></i> API Users List</h3>
     </div>
     <div class="panel-body">
         <div class="row">
@@ -8,7 +8,7 @@
 
             </div>
             <div class="col-lg-2 col-md-3 col-sm-3">
-                <a href="{{ route('sharedsettings.data.new') }}" class="btn btn-info"><i class="fa fa-plus"></i> Add New</a>
+                <a href="{{ route('sharedsettings.apiuser.new') }}" class="btn btn-info"><i class="fa fa-plus"></i> Add New</a>
                 <br /><br />
             </div>
         </div>
@@ -20,24 +20,22 @@
                   <div class="alert alert-success">{{$message}}</div>
                   @endif
 
-
-
-                  @if(! $data->isEmpty() )
+                  @if(! $apiuser->isEmpty() )
                   <table class="table table-hover">
                           <thead>
                               <tr>
-                                  <th>Code</th>
-                                  <th>Title</th>
+                                  <th>Username</th>
+                                  <th>Description</th>
                                   <th>Created</th>
                                   <th>Modified</th>
                                   <th>Operations</th>
                               </tr>
                           </thead>
                           <tbody>
-                              @foreach($data as $k => $d)
+                              @foreach($apiuser as $k => $d)
                               <tr>
-                                  <td>{{$d->code}}</td>
-                                  <td>{{$d->title}}</td>
+                                  <td>{{$d->username}}</td>
+                                  <td>{{$d->description}}</td>
                                   <td>
                                       {{$d->createdBy->email}}
                                       <h6>{{$d->created_at}}</h6>
@@ -47,16 +45,16 @@
                                       <h6>{{$d->updated_at}}</h6>
                                   </td>
                                   <td>
-                                      <a href="{{ route('sharedsettings.data.view', array('id' => $d->id)) }}"><i class="fa fa-bars fa-2x"></i></a>
-                                      <a href="{{ route('sharedsettings.data.edit', array('id' => $d->id)) }}" style="margin: 2px 5px"><i class="fa fa-pencil-square-o fa-2x"></i></a>
-                                      <a href="{{ route('sharedsettings.data.delete', array('id' => $d->id)) }}" class="delete"><i class="fa fa-trash-o fa-2x"></i></a>
+                                      <a href="{{ route('sharedsettings.apiuser.view', array('id' => $d->id)) }}"><i class="fa fa-bars fa-2x"></i></a>
+                                      <a href="{{ route('sharedsettings.apiuser.edit', array('id' => $d->id)) }}" style="margin: 2px 5px"><i class="fa fa-pencil-square-o fa-2x"></i></a>
+                                      <a href="{{ route('sharedsettings.apiuser.delete', array('id' => $d->id)) }}" class="delete"><i class="fa fa-trash-o fa-2x"></i></a>
                                   </td>
                               </tr>
                           </tbody>
                           @endforeach
                   </table>
                   <div class="paginator">
-                      {{$data->links()}}
+                      {{$apiuser->links()}}
                   </div>
                   @else
                       <span class="text-warning"><h5>No results found.</h5></span>

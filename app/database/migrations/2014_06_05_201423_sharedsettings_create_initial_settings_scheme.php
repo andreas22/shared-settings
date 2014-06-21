@@ -29,7 +29,9 @@ class SharedsettingsCreateInitialSettingsScheme extends Migration {
         Schema::create('apiusers', function(Blueprint $table)
         {
             $table->increments('id');
-            $table->text('name');
+            $table->text('description');
+            $table->text('username');
+            $table->text('secret');
             $table->text('callback_url');
             $table->text('address');
             $table->dateTime('created_at');

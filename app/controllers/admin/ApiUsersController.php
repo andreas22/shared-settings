@@ -1,133 +1,129 @@
 <?php
 
 
-class ApiUsersController extends BaseController {
+class AdminApiUsersController extends BaseController {
+
+    private $sidebar;
 
     public function __construct()
     {
+        $count = ApiUser::all()->count();
 
-    }
-
-	public function getIndex()
-	{
-      /*  Site::set('title', 'List of API Users');
-        $apps = ApiUser::all();
-        return View::make('admin.apiuser.index', array('apps' => $apps));*/
-	}
-
-    public function getCreate()
-    {
-        Site::set('title', 'Add an API User');
-
-        $form = Form::make(function ($form)
-        {
-            $form->with(new Application);
-            $form->attributes([
-                'url'    => handles('orchestra/foundation::resources/apiusers'),
-                'method' => 'POST'
-            ]);
-
-            $form->fieldset(function ($fieldset)
-            {
-                $fieldset->control('input:text', 'name');
-                $fieldset->control('input:text', 'callback_url');
-                $fieldset->control('input:text', 'address');
-            });
-        });
-
-        return View::make('admin.apiuser.edit', compact('form'));
-    }
-
-    public function postIndex()
-    {
-        $input = Input::all();
-        $rules = array(
-            'name' => ['required'],
-            'callback_url'  => ['required'],
-            'address'  => ['required']
+        $this->sidebar = array(
+            "API Users List <span class=\"badge\">$count</span>" => array('url' => URL::route('sharedsettings.apiuser.list'), 'icon' => '<i class="fa fa-users"></i>'),
+            'Add New' => array('url' => URL::route('sharedsettings.apiuser.new'), 'icon' => '<i class="fa fa-plus-circle"></i>'),
         );
+    }
+    /**
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
+    public function index()
+    {
+        $apiuser = ApiUser::paginate(15);
+        return View::make('admin.apiuser.index', array('apiuser' => $apiuser))->with('sidebar_items', $this->sidebar);
+    }
 
-        $validation = Validator::make($input, $rules);
+    /**
+     * View an API User
+     * @param int $id
+     * @return \Illuminate\View\View
+     */
+    public function view($id = 0)
+    {
+        $apiuser = ApiUser::find($id);
+        return View::make('admin.apiuser.view', array('apiuser' => $apiuser))->with('sidebar_items', $this->sidebar);
+    }
 
-        if ($validation->fails())
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function edit($id = 0)
+    {
+        $apiuser = $id ? ApiUser::find($id) : new ApiUser();
+        return View::make('admin.apiuser.edit', array('apiuser' => $apiuser))->with('sidebar_items', $this->sidebar);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @return Response
+     */
+    public function save()
+    {
+        $validator = Validator::make(Input::all(), ApiUser::$rules);
+
+        if ($validator->fails())
         {
-            return Redirect::to(handles('orchestra/foundation::resources/apiusers/create'))
-                ->withInput()
-                ->withErrors($validation);
+            return Redirect::back()
+                ->withErrors($validator)
+                ->withInput();
         }
 
-        $app = new ApiUser;
-        $app->name = $input['name'];
-        $app->callback_url = $input['callback_url'];
-        $app->address = $input['address'];
-        $app->created_by = Auth::user()->id;
-        $app->modified_by = Auth::user()->id;
-        $app->save();
+        //'name', 'callback_url', 'address', 'modified_by', 'created_by'
 
-        Messages::add('success', 'API User has been added');
+        $id = Input::get('id');
+        $description = Input::get('description');
+        $callback_url = Input::get('callback_url');
+        $address = Input::get('address');
+        $username = Input::get('username');
+        $secret = Input::get('secret');
 
-        return Redirect::to(handles('orchestra/foundation::resources/apiusers'));
-    }
-
-    public function getEdit($id)
-    {
-        Site::set('title', 'Edit an API User');
-
-        $form = Form::make(function ($form) use ($id)
+        //Edit
+        if($id)
         {
-            $form->with(ApiUser::find($id));
-            $form->attributes([
-                'url'    => handles("orchestra/foundation::resources/apiusers/update/{$id}"),
-                'method' => 'PUT'
-            ]);
-
-            $form->fieldset(function ($fieldset)
+            $apiuser = ApiUser::find($id);
+            $apiuser->description = $description;
+            $apiuser->username = $username;
+            if(!empty($secret) &&
+                ($apiuser->secret != md5($secret) && $apiuser->secret != $secret))
+                $apiuser->secret = md5($secret);
+            $apiuser->callback_url = $callback_url;
+            $apiuser->address = $address;
+            $apiuser->modified_by = App::make('authenticator')->getLoggedUser()->id;
+            $apiuser->save();
+        }
+        //New
+        else
+        {
+            $userExists = ApiUser::where('username', '=', $username)->count();
+            if($userExists)
             {
-                $fieldset->control('input:text', 'API User Name', 'name');
-                $fieldset->control('input:text', 'Callback Url (On Change) ', 'callback_url');
-                $fieldset->control('input:text', 'Allowed IP(s)', 'address');
-            });
-        });
+                return Redirect::back()
+                    ->withErrors(array('Username already in use! Please choose a different username and try again.'))
+                    ->withInput();
+            }
 
-        return View::make('admin.apiuser.edit', compact('form'));
-    }
+            $apiuser = new ApiUser;
+            $apiuser->description = $description;
+            $apiuser->username = $username;
+            $apiuser->secret = $secret ? md5($secret) : '';
+            $apiuser->callback_url = $callback_url;
+            $apiuser->address = $address;
+            $apiuser->created_by = App::make('authenticator')->getLoggedUser()->id;
+            $apiuser->modified_by = App::make('authenticator')->getLoggedUser()->id;
+            $apiuser->save();
 
-    public function putUpdate($id)
-    {
-        $app  = ApiUser::findOrFail($id);
-        $input = Input::all();
-        $rules = array(
-            'name' => ['required'],
-            'address'  => ['required']
-        );
-
-        $validation = Validator::make($input, $rules);
-
-        if ($validation->fails())
-        {
-            return Redirect::to(handles("orchestra/foundation::resources/apiusers/edit/{$id}"))
-                ->withInput()
-                ->withErrors($validation);
+            $id = $apiuser->id;
         }
 
-        $app->name = $input['name'];
-        $app->callback_url = $input['callback_url'];
-        $app->address = $input['address'];
-        $app->modified_by = Auth::user()->id;
-        $app->save();
-
-        Messages::add('success', 'API User has been updated');
-
-        return Redirect::to(handles('orchestra/foundation::resources/apiusers'));
+        return Redirect::route('sharedsettings.apiuser.edit', array('id' => $id))->with('message', "Successfully saved!");
     }
 
-    public function getDelete($id)
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function delete($id)
     {
-        $app = ApiUser::findOrFail($id);
-        $app->delete();
-
-        Messages::add('success', 'API User has been deleted');
-
-        return Redirect::to(handles('orchestra/foundation::resources/apiusers'));
+        $result = ApiUser::destroy($id);
+        $message = ($result) ? 'Deleted successfully' : 'Failed to delete';
+        return Redirect::route('sharedsettings.apiuser.list')->with('message', $message);
     }
 }

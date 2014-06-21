@@ -52,5 +52,11 @@ return [
                     "link" => URL::route('sharedsettings.data.list'),
                     "permissions" => ["_superadmin"]
                 ],
+                [
+                    "name" => "API Users",
+                    "route" => "sharedsettings",
+                    "link" => URL::route('sharedsettings.apiuser.list'),
+                    "permissions" => ["_superadmin"]
+                ],
       ]
 ];

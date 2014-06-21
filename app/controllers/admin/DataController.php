@@ -4,12 +4,12 @@ class AdminDataController extends Controller {
 
     private $sidebar;
 
-     public function __construct()
+    public function __construct()
     {
         $countData = Data::all()->count();
 
         $this->sidebar = array(
-            "Data List ($countData)" => array('url' => URL::route('sharedsettings.data.list'), 'icon' => '<i class="fa fa-users"></i>'),
+            "Data List <span class=\"badge\">$countData</span>" => array('url' => URL::route('sharedsettings.data.list'), 'icon' => '<i class="fa fa-list"></i>'),
             'Add New' => array('url' => URL::route('sharedsettings.data.new'), 'icon' => '<i class="fa fa-plus-circle"></i>'),
         );
     }

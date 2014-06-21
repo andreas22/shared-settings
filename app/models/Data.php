@@ -20,7 +20,7 @@ class Data extends Eloquent {
 	 */
 	protected $table = 'data';
 
-    protected $fillable = array('title', 'description', 'content', 'modified_by', 'created_by');
+    protected $fillable = array('title', 'code', 'description', 'content', 'modified_by', 'created_by');
 
     public function applications()
     {
