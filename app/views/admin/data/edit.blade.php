@@ -66,7 +66,7 @@
                     </div>
 
                     {{ Form::button('Save', array('class'=>'btn btn-info', 'id' => 'save')) }}
-                    <a href="{{ route('sharedsettings.data.list') }}" class="btn btn-info">Return</a>
+                    <a href="{{ URL::route('sharedsettings.data.list') }}" class="btn btn-info">Return</a>
                 {{ Form::close() }}
             </div>
             <div class="col-md-4">

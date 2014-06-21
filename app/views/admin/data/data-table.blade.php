@@ -8,7 +8,7 @@
 
             </div>
             <div class="col-lg-2 col-md-3 col-sm-3">
-                <a href="{{URL::action('AdminDataController@edit')}}" class="btn btn-info"><i class="fa fa-plus"></i> Add New</a>
+                <a href="{{ route('sharedsettings.data.new') }}" class="btn btn-info"><i class="fa fa-plus"></i> Add New</a>
                 <br /><br />
             </div>
         </div>
