@@ -1,0 +1,24 @@
+{
+    "name": "ac/sharedsettings",
+    "description": "",
+    "authors": [
+        {
+            "name": "Andreas Christodoulou",
+            "email": "andreas22@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "illuminate/support": "4.2.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "Ac\\Sharedsettings\\": "src/"
+        },
+        "classmap": [
+            "src/migrations",
+            "src/controllers"
+        ]
+    },
+    "minimum-stability": "stable"
+}

@@ -1,4 +1,4 @@
-<?php
+<?php namespace Ac\Sharedsettings\Models;
 
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
 
@@ -25,7 +25,7 @@ class ApiUser extends \Eloquent {
 
     public function data()
     {
-        return $this->belongsToMany('Data', 'apiuser_data', 'apiuser_id', 'data_id');
+        return $this->belongsToMany('Ac\Sharedsettings\Models\Data', 'apiuser_data', 'apiuser_id', 'data_id');
     }
 
     public function createdBy()

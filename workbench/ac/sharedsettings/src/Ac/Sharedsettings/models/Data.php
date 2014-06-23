@@ -1,8 +1,8 @@
-<?php
+<?php namespace Ac\Sharedsettings\Models;
 
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
 
-class Data extends Eloquent {
+class Data extends \Eloquent {
 
     public static $rules = array(
         'code' => 'required',
@@ -24,7 +24,7 @@ class Data extends Eloquent {
 
     public function applications()
     {
-        return $this->belongsToMany('ApiUser', 'apiuser_data', 'apiuser_id', 'data_id');
+        return $this->belongsToMany('Ac\Sharedsettings\Models\ApiUser', 'apiuser_data', 'apiuser_id', 'data_id');
     }
 
     public function createdBy()
