@@ -18,7 +18,10 @@
 			"app/database/migrations",
 			"app/database/seeds",
 			"app/tests/TestCase.php"
-		]
+		],
+        "psr-4": {
+            "Ac\\SharedSettings\\": "workbench/ac/sharedsettings/src/"
+        }
 	},
 	"scripts": {
 		"post-install-cmd": [

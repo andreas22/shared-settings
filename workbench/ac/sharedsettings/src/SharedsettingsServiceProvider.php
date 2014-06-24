@@ -1,4 +1,4 @@
-<?php namespace Ac\Sharedsettings;
+<?php namespace Ac\SharedSettings;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -18,7 +18,7 @@ class SharedsettingsServiceProvider extends ServiceProvider {
 	 */
 	public function boot()
 	{
-		$this->package('ac/sharedsettings', 'sharedsettings');
+        $this->package('ac/sharedsettings', 'sharedsettings', __DIR__);
 	}
 
 	/**
@@ -28,8 +28,8 @@ class SharedsettingsServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-        include __DIR__.'/../../routes.php';
-        include __DIR__.'/../../filters/api-filters.php';
+        include __DIR__.'/routes.php';
+        include __DIR__.'/filters/api-filters.php';
 	}
 
 	/**

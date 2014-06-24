@@ -1,9 +1,15 @@
-<?php namespace Ac\Sharedsettings\Controllers\Admin;
+<?php namespace Ac\SharedSettings\Controllers\Admin;
 
-use Ac\Sharedsettings\Models\ApiUser;
-use Ac\Sharedsettings\Models\Data;
+use Ac\SharedSettings\Models\ApiUser;
+use Ac\SharedSettings\Models\Data;
+use URL;
+use Validator;
+use Redirect;
+use View;
+use Input;
+use App;
 
-class AdminApiUsersController extends BaseController {
+class ApiUsersController extends \Controller {
 
     private $sidebar;
 
