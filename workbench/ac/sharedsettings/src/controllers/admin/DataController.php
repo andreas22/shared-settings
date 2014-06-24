@@ -1,6 +1,7 @@
 <?php namespace Ac\SharedSettings\Controllers\Admin;
 
 use Ac\SharedSettings\Models\Data;
+use Ac\SharedSettings\Models\ApiUser;
 use URL;
 use Validator;
 use Redirect;

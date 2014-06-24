@@ -30,4 +30,20 @@ Route::group(array( 'prefix' => 'admin/sharedsettings',
     Route::post('apiuser/save', array("before" => "csrf", 'as' => 'sharedsettings.apiuser.save', 'uses' => 'Ac\SharedSettings\Controllers\Admin\ApiUsersController@save'));
     Route::get('apiuser/delete/{id}', array('as' => 'sharedsettings.apiuser.delete', 'uses' => 'Ac\SharedSettings\Controllers\Admin\ApiUsersController@delete'));
     Route::post('apiuser/permissions/save', array("before" => "csrf", 'as' => 'sharedsettings.apiuser.permissions.save', 'uses' => 'Ac\SharedSettings\Controllers\Admin\ApiUsersController@permissionsSave'));
+
+});
+
+Route::group(array( 'prefix' => 'api',
+    'before' => array('validate_data_code_exists',
+                      'api_validate_ip',
+                      'api_validate_permissions',
+                      'api_validate_credentials')), function()
+{
+    Route::post('get', array('as' => 'sharedsettings.api.get', 'uses' => 'Ac\SharedSettings\Controllers\Api\DataController@get'));
+});
+
+Route::group(array( 'prefix' => 'admin',
+    'before' => array('logged', 'can_see', 'validate_data_code_exists', 'api_validate_ip')), function()
+{
+    Route::get('test', array('as' => 'sharedsettings.test', 'uses' => 'Ac\SharedSettings\Controllers\Admin\TestController@index'));
 });
