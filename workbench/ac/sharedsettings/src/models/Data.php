@@ -1,13 +1,12 @@
-<?php
+<?php namespace Ac\SharedSettings\Models;
 
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
 
-class ApiUser extends \Eloquent {
+class Data extends \Eloquent {
 
     public static $rules = array(
-        'username' => 'required',
-        'secret' => 'required',
-        'address' => 'required'
+        'code' => 'required',
+        'title' => 'required'
     );
 
     use SoftDeletingTrait;
@@ -19,13 +18,13 @@ class ApiUser extends \Eloquent {
 	 *
 	 * @var string
 	 */
-	protected $table = 'apiusers';
+	protected $table = 'data';
 
-    protected $fillable = array('username', 'secret', 'description', 'callback_url', 'address', 'modified_by', 'created_by');
+    protected $fillable = array('title', 'code', 'description', 'content', 'modified_by', 'created_by');
 
-    public function data()
+    public function applications()
     {
-        return $this->belongsToMany('Data', 'apiuser_data', 'apiuser_id', 'data_id');
+        return $this->belongsToMany('Ac\SharedSettings\Models\ApiUser', 'apiuser_data', 'apiuser_id', 'data_id');
     }
 
     public function createdBy()
@@ -37,5 +36,4 @@ class ApiUser extends \Eloquent {
     {
         return $this->hasOne('User', 'id', 'modified_by');
     }
-
 }

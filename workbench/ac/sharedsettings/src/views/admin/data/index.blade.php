@@ -1,13 +1,13 @@
 @extends('laravel-authentication-acl::admin.layouts.base-2cols')
 
 @section('title')
-    Admin area: API Users List
+    Admin area: Data List
 @stop
 
 @section('content')
 <div class="row">
     {{-- data lists --}}
-    @include('admin.apiuser.apiuser-table')
+    @include('sharedsettings::admin.data.data-table')
 </div>
 @stop
 

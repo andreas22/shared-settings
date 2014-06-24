@@ -1,6 +1,14 @@
-<?php
+<?php namespace Ac\SharedSettings\Controllers\Admin;
 
-class AdminDataController extends Controller {
+use Ac\SharedSettings\Models\Data;
+use URL;
+use Validator;
+use Redirect;
+use View;
+use Input;
+use App;
+
+class DataController extends \Controller {
 
     private $sidebar;
 
@@ -21,7 +29,7 @@ class AdminDataController extends Controller {
 	public function index()
 	{
         $data = Data::paginate(15);
-        return View::make('admin.data.index', array('data' => $data))->with('sidebar_items', $this->sidebar);
+        return View::make('sharedsettings::admin.data.index', array('data' => $data))->with('sidebar_items', $this->sidebar);
 	}
 
     /**
@@ -34,7 +42,7 @@ class AdminDataController extends Controller {
         $data = Data::find($id);
         if(strlen($data->content) == 0)
             $data->content = '{}';
-        return View::make('admin.data.view', array('data' => $data))->with('sidebar_items', $this->sidebar);
+        return View::make('sharedsettings::admin.data.view', array('data' => $data))->with('sidebar_items', $this->sidebar);
     }
 
 	/**
@@ -48,7 +56,7 @@ class AdminDataController extends Controller {
         $data = $id ? Data::find($id) : new Data();
         if(strlen($data->content) == 0)
             $data->content = '{}';
-        return View::make('admin.data.edit', array('data' => $data))->with('sidebar_items', $this->sidebar);
+        return View::make('sharedsettings::admin.data.edit', array('data' => $data))->with('sidebar_items', $this->sidebar);
 	}
 
 	/**

@@ -84,7 +84,7 @@
                     <small>Assign to API User which data can access</small>
                 </h4>
                 {{-- permissions --}}
-                @include('admin.apiuser.perm')
+                @include('sharedsettings::admin.apiuser.perm')
             </div>
         </div>
     </div>

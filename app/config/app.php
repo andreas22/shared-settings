@@ -123,6 +123,7 @@ return array(
 		'Illuminate\Workbench\WorkbenchServiceProvider',
         'Jacopo\Authentication\AuthenticationServiceProvider',
         'Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider',
+        'Ac\SharedSettings\SharedsettingsServiceProvider'
 
 	),
 

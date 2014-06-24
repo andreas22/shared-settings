@@ -1,7 +1,15 @@
-<?php
+<?php namespace Ac\SharedSettings\Controllers\Admin;
 
+use Ac\SharedSettings\Models\ApiUser;
+use Ac\SharedSettings\Models\Data;
+use URL;
+use Validator;
+use Redirect;
+use View;
+use Input;
+use App;
 
-class AdminApiUsersController extends BaseController {
+class ApiUsersController extends \Controller {
 
     private $sidebar;
 
@@ -22,7 +30,7 @@ class AdminApiUsersController extends BaseController {
     public function index()
     {
         $apiuser = ApiUser::paginate(15);
-        return View::make('admin.apiuser.index', array('apiuser' => $apiuser))->with('sidebar_items', $this->sidebar);
+        return View::make('sharedsettings::admin.apiuser.index', array('apiuser' => $apiuser))->with('sidebar_items', $this->sidebar);
     }
 
     /**
@@ -33,7 +41,7 @@ class AdminApiUsersController extends BaseController {
     public function view($id = 0)
     {
         $apiuser = ApiUser::find($id);
-        return View::make('admin.apiuser.view', array('apiuser' => $apiuser))->with('sidebar_items', $this->sidebar);
+        return View::make('sharedsettings::admin.apiuser.view', array('apiuser' => $apiuser))->with('sidebar_items', $this->sidebar);
     }
 
     /**
@@ -60,7 +68,7 @@ class AdminApiUsersController extends BaseController {
                 $permission_values_tmp[$v->id] = sprintf('[%s] %s', $v->code, $v->title);
         }
 
-        return View::make('admin.apiuser.edit', array('apiuser' => $apiuser,
+        return View::make('sharedsettings::admin.apiuser.edit', array('apiuser' => $apiuser,
                                                       'permission_values' => $permission_values_tmp,
                                                       'user_acl' => $apiuser->data))
             ->with('sidebar_items', $this->sidebar);
@@ -81,8 +89,6 @@ class AdminApiUsersController extends BaseController {
                 ->withErrors($validator)
                 ->withInput();
         }
-
-        //'name', 'callback_url', 'address', 'modified_by', 'created_by'
 
         $id = Input::get('id');
         $description = Input::get('description');
