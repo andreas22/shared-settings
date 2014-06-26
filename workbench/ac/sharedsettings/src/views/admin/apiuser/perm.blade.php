@@ -1,21 +1,23 @@
 {{-- add permission --}}
-{{Form::open(["route" => "sharedsettings.apiuser.permissions.save","role"=>"form", 'class' => 'form-add-perm'])}}
-    <div class="form-group">
-        <div class="input-group">
-            <span class="input-group-addon form-button button-add-perm"><span class="glyphicon glyphicon-plus-sign add-input"></span></span>
-            {{Form::select('data_id', $permission_values, '', ["class"=>"form-control permission-select"])}}
-        </div>
-        <span class="text-danger">{{$errors->first('permissions')}}</span>
-        {{Form::hidden('api_user_id', $apiuser->id)}}
-        {{-- add permission operation --}}
-        {{Form::hidden('operation', 1)}}
-    </div>
-    @if(! $apiuser->exists)
+@if($permission_values)
+    {{Form::open(["route" => "sharedsettings.apiuser.permissions.save","role"=>"form", 'class' => 'form-add-perm'])}}
         <div class="form-group">
-            <span class="text-danger"><h5>You need to create an API User first and then assign any permissions.</span>
+            <div class="input-group">
+                <span class="input-group-addon form-button button-add-perm"><span class="glyphicon glyphicon-plus-sign add-input"></span></span>
+                {{Form::select('data_id', $permission_values, '', ["class"=>"form-control permission-select"])}}
+            </div>
+            <span class="text-danger">{{$errors->first('permissions')}}</span>
+            {{Form::hidden('api_user_id', $apiuser->id)}}
+            {{-- add permission operation --}}
+            {{Form::hidden('operation', 1)}}
         </div>
-    @endif
-{{Form::close()}}
+        @if(! $apiuser->exists)
+            <div class="form-group">
+                <span class="text-danger"><h5>You need to create an API User first and then assign any permissions.</span>
+            </div>
+        @endif
+    {{Form::close()}}
+@endif
 
 {{-- remove permission --}}
 @if( sizeof($user_acl) > 0 )
