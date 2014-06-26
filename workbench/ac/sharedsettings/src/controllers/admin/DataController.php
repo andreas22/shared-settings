@@ -81,6 +81,7 @@ class DataController extends \Controller {
         $description = Input::get('description');
         $content = Input::get('content');
         $code = Input::get('code');
+        $private = Input::get('private');
 
         //Edit
         if($id)
@@ -94,6 +95,7 @@ class DataController extends \Controller {
                     ->withInput();
             }
 
+            $data->private = $private;
             $data->title = $title;
             $data->description = $description;
             $data->content = $content;
@@ -112,6 +114,7 @@ class DataController extends \Controller {
             }
 
             $data = new Data();
+            $data->private = $private;
             $data->code = $code;
             $data->title = $title;
             $data->description = $description;

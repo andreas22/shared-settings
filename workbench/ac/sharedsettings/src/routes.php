@@ -34,12 +34,23 @@ Route::group(array( 'prefix' => 'admin/sharedsettings',
 });
 
 Route::group(array( 'prefix' => 'api',
-    'before' => array('validate_data_code_exists',
-                      'api_validate_ip',
-                      'api_validate_permissions',
-                      'api_validate_credentials')), function()
+                    'before' => array('validate_data_code_exists')), function()
 {
-    Route::post('get', array('as' => 'sharedsettings.api.get', 'uses' => 'Ac\SharedSettings\Controllers\Api\DataController@get'));
+    //Public Data
+    Route::group(array('before' => array('api_is_private')), function()
+    {
+        Route::get('get', array('as' => 'sharedsettings.api.public.get', 'uses' => 'Ac\SharedSettings\Controllers\Api\DataController@get'));
+    });
+
+    //Private Data
+    Route::group(array( 'before' => array(
+                            'api_validate_permissions',
+                            'api_validate_credentials',
+                            'api_validate_ip'
+                        )), function()
+    {
+        Route::post('get', array('as' => 'sharedsettings.api.private.get', 'uses' => 'Ac\SharedSettings\Controllers\Api\DataController@get'));
+    });
 });
 
 Route::group(array( 'prefix' => 'admin',

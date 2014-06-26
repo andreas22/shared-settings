@@ -5,15 +5,35 @@ use Ac\SharedSettings\Common\IPServices;
 Route::filter('validate_data_code_exists', function()
 {
     $code = Input::get('code');
-    $dataExists = \Ac\SharedSettings\Models\Data::viewApiUserDataByCode($code);
+    $data = Ac\SharedSettings\Models\Data::where('code', '=', $code)->first();
 
-    if(!$dataExists)
+    if(!$data)
         return Response::json(
             ['result' => [
-                'status' => '0',
+                'status' => '404',
                 'data' => null,
                 'error' => 'Invalid code request!']
         ]);
+});
+
+Route::filter('api_is_private', function()
+{
+    $code = Input::get('code');
+    $dataExists = \Ac\SharedSettings\Models\Data::viewApiUserDataByCode($code);
+
+    foreach($dataExists as $obj)
+    {
+        if($obj->private)
+        {
+            return Response::json(
+                ['result' => [
+                    'status' => '403',
+                    'data' => null,
+                    'error' => 'Data are private, permission is deny!']
+                ]);
+        }
+        break;
+    }
 });
 
 /*
@@ -56,7 +76,7 @@ Route::filter('api_validate_ip', function()
     if(!$found)
         return Response::json(
             ['result' => [
-                'status' => '0',
+                'status' => '403',
                 'data' => null,
                 'error' => 'Invalid IP address!']
             ]);
@@ -81,7 +101,7 @@ Route::filter('api_validate_permissions', function()
     if(!$found)
         return Response::json(
             ['result' => [
-                'status' => '0',
+                'status' => '403',
                 'data' => null,
                 'error' => 'Inefficient permissions!']
             ]);
@@ -107,7 +127,7 @@ Route::filter('api_validate_credentials', function()
     if(!$found)
         return Response::json(
             ['result' => [
-                'status' => '0',
+                'status' => '404',
                 'data' => null,
                 'error' => 'Invalid credentials!']
             ]);

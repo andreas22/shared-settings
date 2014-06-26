@@ -34,6 +34,15 @@
                     {{ Form::hidden('content', '', array('id' => 'content')) }}
 
                     <div class="form-group">
+                        <div class="controls">
+                            {{ Form::checkbox('private', '1', $data->private) }} {{ Form::label('private', 'Is Private?') }}
+                            <h6>
+                                <small>Setting your data as private it means that it will be only accessible through api user authentication</small>
+                            </h6>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
                         {{ Form::label('code', 'Code') }}
                         <div class="controls">
                             @if(!empty($data->id))

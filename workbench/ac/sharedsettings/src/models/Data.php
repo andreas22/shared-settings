@@ -49,7 +49,7 @@ class Data extends \Eloquent {
             Data::$results = DB::table('apiuser_data')
                                 ->join('apiusers', 'apiusers.id', '=', 'apiuser_data.apiuser_id')
                                 ->join('data', 'data.id', '=', 'apiuser_data.data_id')
-                                ->select('apiusers.address', 'apiusers.username', 'apiusers.secret')
+                                ->select('apiusers.address', 'apiusers.username', 'apiusers.secret', 'data.private')
                                 ->where('data.code', '=', $code)
                                 ->get();
             Data::$code = $code;
