@@ -9,10 +9,9 @@
     {{-- data lists --}}
     @include('sharedsettings::admin.apiuser.apiuser-table')
 </div>
+<script type="text/javascript" >
+    $(document).ready(function(){
+        $('.alert-success').delay(3000).slideUp('slow');
+    });
+</script>
 @stop
-
-@section('footer_scripts')
-
-@stop
-
-

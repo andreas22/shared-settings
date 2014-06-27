@@ -12,7 +12,11 @@
 @stop
 
 @section('footer_scripts')
-
+<script type="text/javascript" >
+    $(document).ready(function(){
+        $('.alert-success').delay(3000).slideUp('slow');
+    });
+</script>
 @stop
 
 

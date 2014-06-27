@@ -13,12 +13,16 @@ class DataController extends \Controller {
 
     private $sidebar;
 
+    private $code_prefix = 'DATA-';
+
+    private $total_records;
+
     public function __construct()
     {
-        $countData = Data::all()->count();
+        $this->total_records = Data::all()->count();
 
         $this->sidebar = array(
-            "Data List <span class=\"badge\">$countData</span>" => array('url' => URL::route('sharedsettings.data.list'), 'icon' => '<i class="fa fa-list"></i>'),
+            "Data List <span class=\"badge\">$this->total_records</span>" => array('url' => URL::route('sharedsettings.data.list'), 'icon' => '<i class="fa fa-list"></i>'),
             'Add New' => array('url' => URL::route('sharedsettings.data.new'), 'icon' => '<i class="fa fa-plus-circle"></i>'),
         );
     }
@@ -57,6 +61,8 @@ class DataController extends \Controller {
         $data = $id ? Data::find($id) : new Data();
         if(strlen($data->content) == 0)
             $data->content = '{}';
+        if(!$id)
+            $data->code = 'auto';
         return View::make('sharedsettings::admin.data.edit', array('data' => $data))->with('sidebar_items', $this->sidebar);
 	}
 
@@ -81,7 +87,7 @@ class DataController extends \Controller {
         $description = Input::get('description');
         $content = Input::get('content');
         $code = Input::get('code');
-        $private = Input::get('private');
+        $private = (int) Input::get('private');
 
         //Edit
         if($id)
@@ -95,23 +101,17 @@ class DataController extends \Controller {
                     ->withInput();
             }
 
-            $data->private = $private;
             $data->title = $title;
             $data->description = $description;
             $data->content = $content;
             $data->modified_by = App::make('authenticator')->getLoggedUser()->id;
+            $data->private = $private;
             $data->save();
         }
         //New
         else
         {
-            $codeExists = Data::where('code', '=', $code)->count();
-            if($codeExists)
-            {
-                return Redirect::back()
-                    ->withErrors(array('Code is already in use!'))
-                    ->withInput();
-            }
+            $code = $this->code_prefix . date('YmdHi') . ($this->total_records + 1);
 
             $data = new Data();
             $data->private = $private;

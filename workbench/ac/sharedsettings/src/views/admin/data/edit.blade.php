@@ -35,23 +35,30 @@
 
                     <div class="form-group">
                         <div class="controls">
-                            {{ Form::checkbox('private', '1', $data->private) }} {{ Form::label('private', 'Is Private?') }}
+                            {{ Form::checkbox('private', '1', $data->private, ['id' => 'private']) }} {{ Form::label('private', 'Is Private?') }}
                             <h6>
                                 <small>Setting your data as private it means that it will be only accessible through api user authentication</small>
                             </h6>
                         </div>
                     </div>
 
-                    <div class="form-group">
+
+                    <div class="alert alert-info public-url-info" role="alert">
+                        <h4><small>This public data can be accessed using the below link</small></h4>
+                        <i class="fa fa-external-link"></i>
+                        <small><a href="{{  route('sharedsettings.api.public.get', ['code' => $data->code]) }}" target="_blank">{{  route('sharedsettings.api.public.get', ['code' => $data->code]) }}</a></small>
+                        <div style="text-align: center">or</div>
+                        <i class="fa fa-external-link"></i>
+                        <small><a href="{{  route('sharedsettings.api.public.get', ['code' => $data->code, 'p' => 1]) }}" target="_blank">{{  route('sharedsettings.api.public.get', ['code' => $data->code, 'p' => 1]) }}</a></small>
+                    </div>
+
+                    <div class="form-group" style="display: none">
                         {{ Form::label('code', 'Code') }}
                         <div class="controls">
-                            @if(!empty($data->id))
-                                {{ Form::text('code', $data->code, array('id' => 'code', 'style' => 'width: 100%', 'readonly' => 'readonly', 'placeholder' => ' A unique code to be used for api access')) }}
-                            @else
-                                {{ Form::text('code', '', array('id' => 'code', 'style' => 'width: 100%', 'placeholder' => ' A unique code to be used for api access')) }}
-                            @endif
+                            {{ Form::text('code', $data->code, array('id' => 'code', 'style' => 'width: 100%; background: #ddd; text-align: center; border:0; font-size: 16px;', 'readonly' => 'readonly', 'placeholder' => ' A unique code to be used for api access')) }}
                         </div>
                     </div>
+
 
                     <div class="form-group">
                         {{ Form::label('title', 'Title') }}
@@ -177,6 +184,21 @@
             $('#content').val(json);
             $('#form').submit();
         });
+
+        $('.alert-success').delay(3000).slideUp('slow');
+
+        start($('#private'));
+
+        $('#private').change(function() {start(this);});
+
+        function start($obj)
+        {
+            if ($($obj).is(":checked") || $('#code').val() == 'auto') {
+                $(".public-url-info").slideUp('slow');
+            } else {
+                $(".public-url-info").slideDown('slow');
+            }
+        }
     });
 </script>
 @stop

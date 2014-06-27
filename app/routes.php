@@ -11,7 +11,7 @@
 |
 */
 
-Route::get('/', function()
+Route::get('/', array( 'as' => 'root', function()
 {
 	return View::make('hello');
-});
+}));
