@@ -24,7 +24,7 @@
                 </div>
                 @endif
 
-                {{Form::open(array('route' => 'sharedsettings.apiuser.save', 'class' => 'well', 'id' => 'form')) }}
+                {{Form::open(array('route' => 'apiuser.save', 'class' => 'well', 'id' => 'form')) }}
                     {{ Form::hidden('id', $apiuser->id) }}
 
                     <div class="form-group">
@@ -74,7 +74,7 @@
                     </div>
 
                     {{ Form::submit('Save', array('class'=>'btn btn-info', 'id' => 'save')) }}
-                    <a href="{{ URL::route('sharedsettings.apiuser.list') }}" class="btn btn-info">Return</a>
+                    <a href="{{ URL::route('apiuser.list') }}" class="btn btn-info">Return</a>
                 {{ Form::close() }}
             </div>
             <div class="col-md-6 col-xs-12">

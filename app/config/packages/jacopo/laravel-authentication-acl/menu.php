@@ -48,68 +48,68 @@ return [
                 ],
                 [
                     "name" => "Data",
-                    "route" => "sharedsettings",
-                    "link" => URL::route('sharedsettings.data.list'),
+                    "route" => "data",
+                    "link" => URL::route('data.list'),
                     "permissions" => ["_superadmin"]
                 ],
                 [
                     "name" => "",
-                    "route" => "sharedsettings",
-                    "link" => URL::route('sharedsettings.data.new'),
+                    "route" => "data",
+                    "link" => URL::route('data.new'),
                     "permissions" => ["_superadmin"]
                 ],
                 [
                     "name" => "",
-                    "route" => "sharedsettings",
-                    "link" => URL::route('sharedsettings.data.edit'),
+                    "route" => "data",
+                    "link" => URL::route('data.edit'),
                     "permissions" => ["_superadmin"]
                 ],
                 [
                     "name" => "",
-                    "route" => "sharedsettings",
-                    "link" => URL::route('sharedsettings.data.save'),
+                    "route" => "data",
+                    "link" => URL::route('data.save'),
                     "permissions" => ["_superadmin"]
                 ],
                 [
                     "name" => "",
-                    "route" => "sharedsettings",
-                    "link" => URL::route('sharedsettings.data.delete'),
+                    "route" => "data",
+                    "link" => URL::route('data.delete'),
                     "permissions" => ["_superadmin"]
                 ],
                 [
                     "name" => "API Users",
-                    "route" => "sharedsettings",
-                    "link" => URL::route('sharedsettings.apiuser.list'),
+                    "route" => "apiuser",
+                    "link" => URL::route('apiuser.list'),
                     "permissions" => ["_superadmin"]
                 ],
                 [
                     "name" => "",
-                    "route" => "sharedsettings",
-                    "link" => URL::route('sharedsettings.apiuser.new'),
+                    "route" => "apiuser",
+                    "link" => URL::route('apiuser.new'),
                     "permissions" => ["_superadmin"]
                 ],
                 [
                     "name" => "",
-                    "route" => "sharedsettings",
-                    "link" => URL::route('sharedsettings.apiuser.edit'),
+                    "route" => "apiuser",
+                    "link" => URL::route('apiuser.edit'),
                     "permissions" => ["_superadmin"]
                 ],
                 [
                     "name" => "",
-                    "route" => "sharedsettings",
-                    "link" => URL::route('sharedsettings.apiuser.save'),
+                    "route" => "apiuser",
+                    "link" => URL::route('apiuser.save'),
                     "permissions" => ["_superadmin"]
                 ],
                 [
                     "name" => "",
-                    "route" => "sharedsettings",
-                    "link" => URL::route('sharedsettings.apiuser.delete'),
+                    "route" => "apiuser",
+                    "link" => URL::route('apiuser.delete'),
                     "permissions" => ["_superadmin"]
                 ],
                 [
                     "name" => "",
-                    "route" => "sharedsettings",
-                    "link" => URL::route('sharedsettings.apiuser.permissions.save'),
+                    "route" => "apiuser",
+                    "link" => URL::route('apiuser.permissions.save'),
                     "permissions" => ["_superadmin"]
                 ]
       ]

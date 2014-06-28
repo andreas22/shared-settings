@@ -1,6 +1,6 @@
 {{-- add permission --}}
 @if($permission_values)
-    {{Form::open(["route" => "sharedsettings.apiuser.permissions.save","role"=>"form", 'class' => 'form-add-perm'])}}
+    {{Form::open(["route" => "apiuser.permissions.save","role"=>"form", 'class' => 'form-add-perm'])}}
         <div class="form-group">
             <div class="input-group">
                 <span class="input-group-addon form-button button-add-perm"><span class="glyphicon glyphicon-plus-sign add-input"></span></span>
@@ -22,7 +22,7 @@
 {{-- remove permission --}}
 @if( sizeof($user_acl) > 0 )
     @foreach($user_acl as $permission)
-        {{Form::open(["route" => "sharedsettings.apiuser.permissions.save", "role"=>"form", 'class' => 'form-del-perm', 'id' => 'frm' . $permission->id])}}
+        {{Form::open(["route" => "apiuser.permissions.save", "role"=>"form", 'class' => 'form-del-perm', 'id' => 'frm' . $permission->id])}}
         <div class="form-group">
             <div class="input-group">
                 <span class="input-group-addon form-button button-del-perm" ss-perm-id="{{ $permission->id }}">

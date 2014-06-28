@@ -22,8 +22,8 @@ class DataController extends \Controller {
         $this->total_records = Data::all()->count();
 
         $this->sidebar = array(
-            "Data List <span class=\"badge\">$this->total_records</span>" => array('url' => URL::route('sharedsettings.data.list'), 'icon' => '<i class="fa fa-list"></i>'),
-            'Add New' => array('url' => URL::route('sharedsettings.data.new'), 'icon' => '<i class="fa fa-plus-circle"></i>'),
+            "Data List <span class=\"badge\">$this->total_records</span>" => array('url' => URL::route('data.list'), 'icon' => '<i class="fa fa-list"></i>'),
+            'Add New' => array('url' => URL::route('data.new'), 'icon' => '<i class="fa fa-plus-circle"></i>'),
         );
     }
 	/**
@@ -125,7 +125,7 @@ class DataController extends \Controller {
             $id = $data->id;
         }
 
-        return Redirect::route('sharedsettings.data.edit', array('id' => $id))->with('message', "Successfully saved!");
+        return Redirect::route('data.edit', array('id' => $id))->with('message', "Successfully saved!");
 	}
 
 	/**
@@ -138,6 +138,6 @@ class DataController extends \Controller {
 	{
         $result = Data::destroy($id);
         $message = ($result) ? 'Deleted successfully' : 'Failed to delete';
-        return Redirect::route('sharedsettings.data.list')->with('message', $message);
+        return Redirect::route('data.list')->with('message', $message);
 	}
 }

@@ -18,8 +18,8 @@ class ApiUsersController extends \Controller {
         $count = ApiUser::all()->count();
 
         $this->sidebar = array(
-            "API Users List <span class=\"badge\">$count</span>" => array('url' => URL::route('sharedsettings.apiuser.list'), 'icon' => '<i class="fa fa-users"></i>'),
-            'Add New' => array('url' => URL::route('sharedsettings.apiuser.new'), 'icon' => '<i class="fa fa-plus-circle"></i>'),
+            "API Users List <span class=\"badge\">$count</span>" => array('url' => URL::route('apiuser.list'), 'icon' => '<i class="fa fa-users"></i>'),
+            'Add New' => array('url' => URL::route('apiuser.new'), 'icon' => '<i class="fa fa-plus-circle"></i>'),
         );
     }
     /**
@@ -135,7 +135,7 @@ class ApiUsersController extends \Controller {
             $id = $apiuser->id;
         }
 
-        return Redirect::route('sharedsettings.apiuser.edit', array('id' => $id))->with('message', "Successfully saved!");
+        return Redirect::route('apiuser.edit', array('id' => $id))->with('message', "Successfully saved!");
     }
 
     /**
@@ -148,7 +148,7 @@ class ApiUsersController extends \Controller {
     {
         $result = ApiUser::destroy($id);
         $message = ($result) ? 'Deleted successfully' : 'Failed to delete';
-        return Redirect::route('sharedsettings.apiuser.list')->with('message', $message);
+        return Redirect::route('apiuser.list')->with('message', $message);
     }
 
     /**
@@ -176,6 +176,6 @@ class ApiUsersController extends \Controller {
                 break;
         }
 
-        return Redirect::route('sharedsettings.apiuser.edit', array('id' => $api_user_id))->with('message', $message);
+        return Redirect::route('apiuser.edit', array('id' => $api_user_id))->with('message', $message);
     }
 }

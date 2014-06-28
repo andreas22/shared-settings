@@ -29,7 +29,7 @@
                 </div>
                 @endif
 
-                {{Form::open(array('route' => 'sharedsettings.data.save', 'class' => 'well', 'id' => 'form')) }}
+                {{Form::open(array('route' => 'data.save', 'class' => 'well', 'id' => 'form')) }}
                     {{ Form::hidden('id', $data->id) }}
                     {{ Form::hidden('content', '', array('id' => 'content')) }}
 
@@ -43,13 +43,13 @@
                     </div>
 
 
-                    <div class="alert alert-info public-url-info" role="alert">
+                    <div class="alert alert-info public-url-info" style="display: none" role="alert">
                         <h4><small>This public data can be accessed using the below link</small></h4>
                         <i class="fa fa-external-link"></i>
-                        <small><a href="{{  route('sharedsettings.api.public.get', ['code' => $data->code]) }}" target="_blank">{{  route('sharedsettings.api.public.get', ['code' => $data->code]) }}</a></small>
+                        <small><a href="{{  route('api.public.get', ['code' => $data->code]) }}" target="_blank">{{  route('api.public.get', ['code' => $data->code]) }}</a></small>
                         <div style="text-align: center">or</div>
                         <i class="fa fa-external-link"></i>
-                        <small><a href="{{  route('sharedsettings.api.public.get', ['code' => $data->code, 'p' => 1]) }}" target="_blank">{{  route('sharedsettings.api.public.get', ['code' => $data->code, 'p' => 1]) }}</a></small>
+                        <small><a href="{{  route('api.public.get', ['code' => $data->code, 'p' => 1]) }}" target="_blank">{{  route('api.public.get', ['code' => $data->code, 'p' => 1]) }}</a></small>
                     </div>
 
                     <div class="form-group" style="display: none">
@@ -82,7 +82,7 @@
                     </div>
 
                     {{ Form::button('Save', array('class'=>'btn btn-info', 'id' => 'save')) }}
-                    <a href="{{ URL::route('sharedsettings.data.list') }}" class="btn btn-info">Return</a>
+                    <a href="{{ URL::route('data.list') }}" class="btn btn-info">Return</a>
                 {{ Form::close() }}
             </div>
             <div class="col-md-4">
