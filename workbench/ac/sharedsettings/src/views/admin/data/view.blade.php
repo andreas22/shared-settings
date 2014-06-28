@@ -20,7 +20,9 @@
 
                     <div class="form-group">
                         <div class="controls">
-                            <div style="width: 100%; padding: 5px; background: none; color: #31708f; border: 1px solid #bce8f1 !important">{{ $data->code }}</div>
+                            <div style="width: 100%; padding: 5px; background: none; color: #31708f; border: 1px solid #bce8f1 !important">
+                                <i class="fa {{ $data->private ? 'fa-lock' : 'fa-unlock' }}"></i> {{ $data->code }}
+                            </div>
                         </div>
                     </div>
 

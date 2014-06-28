@@ -96,7 +96,7 @@ class ApiUsersController extends \Controller {
         $address = Input::get('address');
         $username = Input::get('username');
         $secret = Input::get('secret');
-        $active = Input::get('active');
+        $active = (int) Input::get('active');
 
         //Edit
         if($id)

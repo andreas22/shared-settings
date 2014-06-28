@@ -13,12 +13,19 @@
         <div class="row">
             <div class="col-md-12">
 
-                    <div class="form-group">
-                        {{ Form::label('username', 'Username') }}
-                        <div class="controls">
-                            {{ $apiuser->username }}
-                        </div>
+                <div class="form-group">
+                    {{ Form::label('active', 'Active') }}
+                    <div class="controls">
+                        <i class="fa {{ $apiuser->active ? 'fa-check-square-o' : 'fa-square-o' }} fa-2x"></i>
                     </div>
+                </div>
+
+                <div class="form-group">
+                    {{ Form::label('username', 'Username') }}
+                    <div class="controls">
+                        {{ $apiuser->username }}
+                    </div>
+                </div>
 
                 <div class="form-group">
                     {{ Form::label('description', 'Description') }}

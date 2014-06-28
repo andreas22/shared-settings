@@ -28,6 +28,7 @@
                                   <th>Description</th>
                                   <th>Created</th>
                                   <th>Modified</th>
+                                  <th style="text-align: center">Active</th>
                                   <th>Operations</th>
                               </tr>
                           </thead>
@@ -43,6 +44,11 @@
                                   <td>
                                       {{$d->modifiedBy->email}}
                                       <h6>{{$d->updated_at}}</h6>
+                                  </td>
+                                  <td style="text-align: center">
+                                      <a href="#" title="{{ $d->active ? 'Active' : 'Inactive' }}">
+                                          <i class="fa {{ $d->active ? 'fa-check-square-o' : 'fa-square-o' }} fa-2x"></i>
+                                      </a>
                                   </td>
                                   <td>
                                       <a href="{{ URL::route('apiuser.view', array('id' => $d->id)) }}"><i class="fa fa-bars fa-2x"></i></a>

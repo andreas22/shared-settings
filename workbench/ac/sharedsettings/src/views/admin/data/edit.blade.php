@@ -33,6 +33,8 @@
                     {{ Form::hidden('id', $data->id) }}
                     {{ Form::hidden('content', '', array('id' => 'content')) }}
 
+                    {{ Form::hidden('code', $data->code, array('id' => 'code')) }}
+
                     <div class="form-group">
                         <div class="controls">
                             {{ Form::checkbox('private', '1', $data->private, ['id' => 'private']) }} {{ Form::label('private', 'Is Private?') }}
@@ -71,7 +73,7 @@
 
                 <div class="form-group" style="display: {{ $data->code == 'auto' ? 'none' : 'block'; }}">
                     <div class="controls">
-                        {{ Form::text('code', $data->code, array('id' => 'code', 'style' => 'width: 100%; background: none; color: #31708f; border: 1px solid #bce8f1 !important; text-align: center; border:0; font-size: 16px;', 'readonly' => 'readonly', 'placeholder' => ' A unique code to be used for api access')) }}
+                        {{ Form::text('code1', $data->code, array('style' => 'width: 100%; background: none; color: #31708f; border: 1px solid #bce8f1 !important; text-align: center; border:0; font-size: 16px;', 'readonly' => 'readonly', 'placeholder' => ' A unique code to be used for api access')) }}
                     </div>
                 </div>
 
