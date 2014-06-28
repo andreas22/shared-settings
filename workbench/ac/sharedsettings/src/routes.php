@@ -59,9 +59,3 @@ Route::group(array( 'prefix' => 'api',
         Route::post('get', array('as' => 'api.private.get', 'uses' => 'Ac\SharedSettings\Controllers\Api\DataController@get'));
     });
 });
-
-Route::group(array( 'prefix' => 'admin',
-    'before' => array('logged', 'can_see', 'validate_data_code_exists', 'api_validate_ip')), function()
-{
-    Route::get('test', array('as' => 'test', 'uses' => 'Ac\SharedSettings\Controllers\Admin\TestController@index'));
-});
