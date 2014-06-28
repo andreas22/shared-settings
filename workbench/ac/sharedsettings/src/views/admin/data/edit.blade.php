@@ -33,12 +33,6 @@
                     {{ Form::hidden('id', $data->id) }}
                     {{ Form::hidden('content', '', array('id' => 'content')) }}
 
-                    <div class="form-group" style="display: {{ $data->code == 'auto' ? 'none' : 'block'; }}">
-                        <div class="controls">
-                            {{ Form::text('code', $data->code, array('id' => 'code', 'style' => 'width: 100%; background: none; color: #6AA8B4; border: 1px solid #bce8f1 !important; text-align: center; border:0; font-size: 16px;', 'readonly' => 'readonly', 'placeholder' => ' A unique code to be used for api access')) }}
-                        </div>
-                    </div>
-
                     <div class="form-group">
                         <div class="controls">
                             {{ Form::checkbox('private', '1', $data->private, ['id' => 'private']) }} {{ Form::label('private', 'Is Private?') }}
@@ -46,15 +40,6 @@
                                 <small>Setting your data as private it means that it will be only accessible through api user authentication</small>
                             </h6>
                         </div>
-                    </div>
-
-                    <div class="alert alert-info public-url-info" style="display: none" role="alert">
-                        <h4><small>Public data can be accessed using the below link</small></h4>
-                        <i class="fa fa-external-link"></i>
-                        <small><a href="{{  route('api.public.get', ['code' => $data->code]) }}" target="_blank">{{  route('api.public.get', ['code' => $data->code]) }}</a></small>
-                        <div style="text-align: center">or</div>
-                        <i class="fa fa-external-link"></i>
-                        <small><a href="{{  route('api.public.get', ['code' => $data->code, 'p' => 1]) }}" target="_blank">{{  route('api.public.get', ['code' => $data->code, 'p' => 1]) }}</a></small>
                     </div>
 
                     <div class="form-group">
@@ -83,6 +68,22 @@
                 {{ Form::close() }}
             </div>
             <div class="col-md-4">
+
+                <div class="form-group" style="display: {{ $data->code == 'auto' ? 'none' : 'block'; }}">
+                    <div class="controls">
+                        {{ Form::text('code', $data->code, array('id' => 'code', 'style' => 'width: 100%; background: none; color: #31708f; border: 1px solid #bce8f1 !important; text-align: center; border:0; font-size: 16px;', 'readonly' => 'readonly', 'placeholder' => ' A unique code to be used for api access')) }}
+                    </div>
+                </div>
+
+                <div class="alert alert-info public-url-info" style="display: none" role="alert">
+                    <h4><small>Public data can be accessed using the direct links below:</small></h4>
+                    <i class="fa fa-external-link"></i>
+                    <small><a href="{{  route('api.public.get', ['code' => $data->code]) }}" target="_blank">Link 1</a></small>
+                    <div style="text-align: center"></div>
+                    <i class="fa fa-external-link"></i>
+                    <small><a href="{{  route('api.public.get', ['code' => $data->code, 'p' => 1]) }}" target="_blank">Link 2</a></small>
+                </div>
+
                 <h3 style="margin-top: 0;">Shortcut keys</h3>
                 The editor supports shortcut keys for all available actions. The editor can be used by just a keyboard. The following short cut keys are available:
                 <table class="table-bordered">

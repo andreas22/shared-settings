@@ -19,17 +19,16 @@
             <div class="col-md-12">
 
                     <div class="form-group">
-                        {{ Form::label('code', 'Code') }}
                         <div class="controls">
-                            <div style="width: 100%; padding: 5px; background: none; color: #6AA8B4; border: 1px solid #bce8f1 !important">{{ $data->code }}</div>
+                            <div style="width: 100%; padding: 5px; background: none; color: #31708f; border: 1px solid #bce8f1 !important">{{ $data->code }}</div>
                         </div>
                     </div>
 
                     <div class="alert alert-info public-url-info" style="display: {{ $data->private ? 'none' : 'block' }}" role="alert">
-                        <h4><small>Public data can be accessed using the below link</small></h4>
+                        <h4><small>Public data can be accessed using the direct links below:</small></h4>
                         <i class="fa fa-external-link"></i>
                         <small><a href="{{  route('api.public.get', ['code' => $data->code]) }}" target="_blank">{{  route('api.public.get', ['code' => $data->code]) }}</a></small>
-                        <div style="text-align: center">or</div>
+                        <div style="text-align: center"></div>
                         <i class="fa fa-external-link"></i>
                         <small><a href="{{  route('api.public.get', ['code' => $data->code, 'p' => 1]) }}" target="_blank">{{  route('api.public.get', ['code' => $data->code, 'p' => 1]) }}</a></small>
                     </div>
@@ -37,14 +36,14 @@
                     <div class="form-group">
                         {{ Form::label('title', 'Title') }}
                         <div class="controls">
-                            <div style="width: 100%; padding: 5px; background: none; color: #6AA8B4; border: 1px solid #bce8f1 !important">{{ $data->title }}</div>
+                            <div style="width: 100%; padding: 5px; background: none; color: #31708f; border: 1px solid #bce8f1 !important">{{ $data->title }}</div>
                         </div>
                     </div>
 
                     <div class="form-group">
                         {{ Form::label('description', 'Description') }}
                         <div class="controls">
-                            <div style="width: 100%; padding: 5px; background: none; color: #6AA8B4; border: 1px solid #bce8f1 !important">{{ $data->description }}</div>
+                            <div style="width: 100%; padding: 5px; background: none; color: #31708f; border: 1px solid #bce8f1 !important">{{ $data->description }}</div>
                         </div>
                     </div>
 
