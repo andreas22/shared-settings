@@ -30,6 +30,7 @@
                                   <th>Title</th>
                                   <th>Created</th>
                                   <th>Modified</th>
+                                  <th style="text-align: center">Status</th>
                                   <th>Operations</th>
                               </tr>
                           </thead>
@@ -45,6 +46,11 @@
                                   <td>
                                       {{$d->modifiedBy->email}}
                                       <h6>{{$d->updated_at}}</h6>
+                                  </td>
+                                  <td style="text-align: center">
+                                      <a href="#" title="{{ $d->private ? 'Private' : 'Public' }}">
+                                          <i class="fa {{ $d->private ? 'fa-lock' : 'fa-unlock' }} fa-2x"></i>
+                                      </a>
                                   </td>
                                   <td>
                                       <a href="{{ route('data.view', array('id' => $d->id)) }}"><i class="fa fa-bars fa-2x"></i></a>

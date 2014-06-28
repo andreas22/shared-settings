@@ -33,6 +33,12 @@
                     {{ Form::hidden('id', $data->id) }}
                     {{ Form::hidden('content', '', array('id' => 'content')) }}
 
+                    <div class="form-group" style="display: {{ $data->code == 'auto' ? 'none' : 'block'; }}">
+                        <div class="controls">
+                            {{ Form::text('code', $data->code, array('id' => 'code', 'style' => 'width: 100%; background: none; color: #6AA8B4; border: 1px solid #bce8f1 !important; text-align: center; border:0; font-size: 16px;', 'readonly' => 'readonly', 'placeholder' => ' A unique code to be used for api access')) }}
+                        </div>
+                    </div>
+
                     <div class="form-group">
                         <div class="controls">
                             {{ Form::checkbox('private', '1', $data->private, ['id' => 'private']) }} {{ Form::label('private', 'Is Private?') }}
@@ -42,23 +48,14 @@
                         </div>
                     </div>
 
-
                     <div class="alert alert-info public-url-info" style="display: none" role="alert">
-                        <h4><small>This public data can be accessed using the below link</small></h4>
+                        <h4><small>Public data can be accessed using the below link</small></h4>
                         <i class="fa fa-external-link"></i>
                         <small><a href="{{  route('api.public.get', ['code' => $data->code]) }}" target="_blank">{{  route('api.public.get', ['code' => $data->code]) }}</a></small>
                         <div style="text-align: center">or</div>
                         <i class="fa fa-external-link"></i>
                         <small><a href="{{  route('api.public.get', ['code' => $data->code, 'p' => 1]) }}" target="_blank">{{  route('api.public.get', ['code' => $data->code, 'p' => 1]) }}</a></small>
                     </div>
-
-                    <div class="form-group" style="display: none">
-                        {{ Form::label('code', 'Code') }}
-                        <div class="controls">
-                            {{ Form::text('code', $data->code, array('id' => 'code', 'style' => 'width: 100%; background: #ddd; text-align: center; border:0; font-size: 16px;', 'readonly' => 'readonly', 'placeholder' => ' A unique code to be used for api access')) }}
-                        </div>
-                    </div>
-
 
                     <div class="form-group">
                         {{ Form::label('title', 'Title') }}
