@@ -28,6 +28,12 @@
                     {{ Form::hidden('id', $apiuser->id) }}
 
                     <div class="form-group">
+                        <div class="controls">
+                            {{ Form::checkbox('active', '1', $apiuser->active, ['id' => 'active']) }} {{ Form::label('active', 'Active') }}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
                         {{ Form::label('username', 'Username') }}
                         <div class="controls">
                             {{ Form::text('username', $apiuser->username, array('id' => 'username', 'style' => 'width: 100%', 'placeholder' => ' Username used by API to authenticate the user')) }}

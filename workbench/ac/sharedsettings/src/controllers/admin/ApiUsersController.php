@@ -96,11 +96,13 @@ class ApiUsersController extends \Controller {
         $address = Input::get('address');
         $username = Input::get('username');
         $secret = Input::get('secret');
+        $active = Input::get('active');
 
         //Edit
         if($id)
         {
             $apiuser = ApiUser::find($id);
+            $apiuser->active = $active;
             $apiuser->description = $description;
             $apiuser->username = $username;
             if(!empty($secret) &&
@@ -123,6 +125,7 @@ class ApiUsersController extends \Controller {
             }
 
             $apiuser = new ApiUser;
+            $apiuser->active = $active;
             $apiuser->description = $description;
             $apiuser->username = $username;
             $apiuser->secret = $secret ? md5($secret) : '';

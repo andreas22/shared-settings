@@ -36,6 +36,26 @@ Route::filter('api_is_private', function()
     }
 });
 
+Route::filter('api_apiuser_is_active', function()
+{
+    $code = Input::get('code');
+    $dataExists = \Ac\SharedSettings\Models\Data::viewApiUserDataByCode($code);
+
+    foreach($dataExists as $obj)
+    {
+        if(!$obj->active)
+        {
+            return Response::json(
+                ['result' => [
+                    'status' => '403',
+                    'data' => null,
+                    'error' => 'API user is not active!']
+                ]);
+        }
+        break;
+    }
+});
+
 /*
  * Single: 192.168.0.1
  * List (comma separated): 192.168.0.1,192.168.0.2

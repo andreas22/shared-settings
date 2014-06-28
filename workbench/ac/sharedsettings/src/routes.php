@@ -50,6 +50,7 @@ Route::group(array( 'prefix' => 'api',
 
     //Private Data
     Route::group(array( 'before' => array(
+                            'api_apiuser_is_active',
                             'api_validate_permissions',
                             'api_validate_credentials',
                             'api_validate_ip'
