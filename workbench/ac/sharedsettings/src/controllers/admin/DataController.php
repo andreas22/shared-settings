@@ -1,5 +1,6 @@
 <?php namespace Ac\SharedSettings\Controllers\Admin;
 
+use App;
 use URL;
 use Redirect;
 use View;
@@ -7,6 +8,7 @@ use Input;
 use Ac\SharedSettings\ViewModels\PaginateViewModel;
 use Ac\SharedSettings\ViewModels\DataViewModel;
 use Ac\SharedSettings\Repositories\DataRepositoryInterface;
+use Ac\SharedSettings\Repositories\NotificationsRepositoryInterface;
 
 class DataController extends \Controller {
 
@@ -21,9 +23,15 @@ class DataController extends \Controller {
      */
     private $data;
 
-    public function __construct(DataRepositoryInterface $data)
+    /*
+     * @var Ac\SharedSettings\Repositories\NotificationsRepositoryInterface;
+     */
+    private $notifications;
+
+    public function __construct(DataRepositoryInterface $data, NotificationsRepositoryInterface $notifications)
     {
         $this->data = $data;
+        $this->notifications = $notifications;
         $this->total_records = $this->data->total();
         $this->sidebar = array(
             "Data List <span class=\"badge\">$this->total_records</span>" => array('url' => URL::route('data.list'), 'icon' => '<i class="fa fa-list"></i>'),
@@ -79,6 +87,7 @@ class DataController extends \Controller {
         $data = $this->data->find($id);
         $model = new DataViewModel();
         $model->init($data);
+        $model->hasPendingNotifications = $this->notifications->hasPendingNotification($id);
 
         return View::make('sharedsettings::admin.data.edit', array('model' => $model))
             ->with('sidebar_items', $this->sidebar);
@@ -103,13 +112,16 @@ class DataController extends \Controller {
         {
             $id = Input::get('id');
             $data = $this->data->save(Input::all());
+            $created_by = App::make('authenticator')->getLoggedUser()->id;
+            $notification_id = $this->notifications->create($id, $created_by, date('Y-m-d H:i:s'));
+
+            if(Input::get('send_notification'))
+                $this->notifications->send($notification_id, $created_by);
 
             if($data == null)
-            {
                 return Redirect::back()
                     ->withErrors(array('Cheating is not a good idea!'))
                     ->withInput();
-            }
         }
         //New
         else

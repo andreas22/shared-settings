@@ -15,6 +15,7 @@ class DataViewModel
     public $private;
     public $created_by_email;
     public $modified_by_email;
+    public $hasPendingNotifications;
 
     public function init(\Ac\SharedSettings\Models\Data $data = null)
     {

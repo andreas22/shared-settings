@@ -34,6 +34,7 @@ class SharedsettingsServiceProvider extends ServiceProvider {
         $this->app->bind('Ac\SharedSettings\Repositories\APIUsersRepositoryInterface', 'Ac\SharedSettings\Repositories\DbAPIUsersRepository');
         $this->app->bind('Ac\SharedSettings\Repositories\DataRepositoryInterface', 'Ac\SharedSettings\Repositories\DbDataRepository');
         $this->app->bind('Ac\SharedSettings\Repositories\APIFiltersRepositoryInterface', 'Ac\SharedSettings\Repositories\APIFiltersRepository');
+        $this->app->bind('Ac\SharedSettings\Repositories\NotificationsRepositoryInterface', 'Ac\SharedSettings\Repositories\DbNotificationsRepository');
 	}
 
 	/**

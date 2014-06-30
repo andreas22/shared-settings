@@ -32,6 +32,7 @@
                 {{Form::open(array('route' => 'data.save', 'class' => 'well', 'id' => 'form')) }}
                     {{ Form::hidden('id', $model->id) }}
                     {{ Form::hidden('content', '', array('id' => 'content')) }}
+                    {{ Form::hidden('send_notification', 0, array('id' => 'send_notification')) }}
 
                     {{ Form::hidden('code', $model->code, array('id' => 'code')) }}
 
@@ -66,6 +67,9 @@
                     </div>
 
                     {{ Form::button('Save', array('class'=>'btn btn-info', 'id' => 'save')) }}
+                    @if(!empty($model->id))
+                        {{ Form::button('Save & Notify', array('class'=>'btn btn-warning', 'id' => 'notify')) }}
+                    @endif
                     <a href="{{ URL::route('data.list') }}" class="btn btn-info">Return</a>
                 {{ Form::close() }}
             </div>
@@ -75,6 +79,10 @@
                     <div class="controls">
                         {{ Form::text('code1', $model->code, array('style' => 'width: 100%; background: none; color: #31708f; border: 1px solid #bce8f1 !important; text-align: center; border:0; font-size: 16px;', 'readonly' => 'readonly', 'placeholder' => ' A unique code to be used for api access')) }}
                     </div>
+                </div>
+
+                <div class="alert alert-warning" style="display: {{ $model->hasPendingNotifications ? 'block' : 'none'}}" role="alert">
+                    <i class="fa fa-warning"></i> API Users have not been notify since {{ $model->hasPendingNotifications }}. Click 'Save & Notify' if you wish to let them know.
                 </div>
 
                 <div class="alert alert-info public-url-info" style="display: none" role="alert">
@@ -182,6 +190,13 @@
         $('#save').click(function(){
             var json = editor.getText();
             $('#content').val(json);
+            $('#form').submit();
+        });
+
+        $('#notify').click(function(){
+            var json = editor.getText();
+            $('#content').val(json);
+            $('#send_notification').val(1);
             $('#form').submit();
         });
 

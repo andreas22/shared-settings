@@ -129,8 +129,10 @@ class DbDataRepository implements DataRepositoryInterface
         return DB::table('apiuser_data')
             ->join('apiusers', 'apiusers.id', '=', 'apiuser_data.apiuser_id')
             ->join('data', 'data.id', '=', 'apiuser_data.data_id')
-            ->select('apiusers.*', 'data.*')
+            ->select('apiusers.*', 'data.*', 'apiusers.id as apiuser_id')
             ->where('data.code', '=', $code)
+            ->where('apiusers.deleted_at', '=', null)
+            ->where('data.deleted_at', '=', null)
             ->get();
     }
 }
