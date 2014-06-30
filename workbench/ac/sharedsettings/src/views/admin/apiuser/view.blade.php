@@ -16,35 +16,35 @@
                 <div class="form-group">
                     {{ Form::label('active', 'Active') }}
                     <div class="controls">
-                        <i class="fa {{ $apiuser->active ? 'fa-check-square-o' : 'fa-square-o' }} fa-2x"></i>
+                        <i class="fa {{ $model->active ? 'fa-check-square-o' : 'fa-square-o' }} fa-2x"></i>
                     </div>
                 </div>
 
                 <div class="form-group">
                     {{ Form::label('username', 'Username') }}
                     <div class="controls">
-                        {{ $apiuser->username }}
+                        {{ $model->username }}
                     </div>
                 </div>
 
                 <div class="form-group">
                     {{ Form::label('description', 'Description') }}
                     <div class="controls">
-                        {{ $apiuser->description }}
+                        {{ $model->description }}
                     </div>
                 </div>
 
                     <div class="form-group">
                         {{ Form::label('callback_url', 'Callback Url') }}
                         <div class="controls">
-                            {{ $apiuser->callback_url }}
+                            {{ $model->callback_url }}
                         </div>
                     </div>
 
                     <div class="form-group">
                         {{ Form::label('address', 'Address') }}
                         <div class="controls">
-                            {{ $apiuser->address }}
+                            {{ $model->address }}
                         </div>
                     </div>
             </div>

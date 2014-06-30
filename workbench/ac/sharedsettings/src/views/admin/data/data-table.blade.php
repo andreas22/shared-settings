@@ -20,9 +20,7 @@
                   <div class="alert alert-success">{{$message}}</div>
                   @endif
 
-
-
-                  @if(! $data->isEmpty() )
+                  @if(sizeof($model->list) > 0 )
                   <table class="table table-hover">
                           <thead>
                               <tr>
@@ -35,16 +33,16 @@
                               </tr>
                           </thead>
                           <tbody>
-                              @foreach($data as $k => $d)
+                              @foreach($model->list as $k => $d)
                               <tr>
                                   <td>{{$d->code}}</td>
                                   <td>{{$d->title}}</td>
                                   <td>
-                                      {{$d->createdBy->email}}
+                                      {{$d->created_by_email}}
                                       <h6>{{$d->created_at}}</h6>
                                   </td>
                                   <td>
-                                      {{$d->modifiedBy->email}}
+                                      {{$d->modified_by_email}}
                                       <h6>{{$d->updated_at}}</h6>
                                   </td>
                                   <td style="text-align: center">
@@ -62,7 +60,7 @@
                           @endforeach
                   </table>
                   <div class="paginator">
-                      {{$data->links()}}
+                      {{$model->links}}
                   </div>
                   @else
                       <span class="text-warning"><h5>No results found.</h5></span>

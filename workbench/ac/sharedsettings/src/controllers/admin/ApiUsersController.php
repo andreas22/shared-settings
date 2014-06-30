@@ -1,22 +1,34 @@
 <?php namespace Ac\SharedSettings\Controllers\Admin;
 
-use Ac\SharedSettings\Models\ApiUser;
-use Ac\SharedSettings\Models\Data;
 use URL;
-use Validator;
 use Redirect;
 use View;
 use Input;
-use App;
+use Ac\SharedSettings\ViewModels\PaginateViewModel;
+use Ac\SharedSettings\ViewModels\ApiUserViewModel;
+use Ac\SharedSettings\ViewModels\ApiUserPermissionsViewModel;
+use Ac\SharedSettings\Repositories\APIUsersRepositoryInterface;
+use Ac\SharedSettings\Repositories\DataRepositoryInterface;
 
 class ApiUsersController extends \Controller {
 
     private $sidebar;
 
-    public function __construct()
-    {
-        $count = ApiUser::all()->count();
+    /*
+     * @var Ac\SharedSettings\Repositories\APIUsersRepositoryInterface
+     */
+    private $apiuser;
 
+    /*
+     * @var Ac\SharedSettings\Repositories\DataRepositoryInterface
+     */
+    private $data;
+
+    public function __construct(APIUsersRepositoryInterface $apiuser, DataRepositoryInterface $data)
+    {
+        $this->apiuser = $apiuser;
+        $this->data = $data;
+        $count = $this->apiuser->total();
         $this->sidebar = array(
             "API Users List <span class=\"badge\">$count</span>" => array('url' => URL::route('apiuser.list'), 'icon' => '<i class="fa fa-users"></i>'),
             'Add New' => array('url' => URL::route('apiuser.new'), 'icon' => '<i class="fa fa-plus-circle"></i>'),
@@ -29,8 +41,21 @@ class ApiUsersController extends \Controller {
      */
     public function index()
     {
-        $apiuser = ApiUser::paginate(15);
-        return View::make('sharedsettings::admin.apiuser.index', array('apiuser' => $apiuser))->with('sidebar_items', $this->sidebar);
+        $apiuser = $this->apiuser->all(15);
+
+        $model = new PaginateViewModel();
+
+        foreach($apiuser as $d)
+        {
+            $m = new ApiUserViewModel();
+            $m->init($d);
+            $model->add($m);
+        }
+
+        $model->links = $apiuser->links();
+
+        return View::make('sharedsettings::admin.apiuser.index', array('model' => $model))
+            ->with('sidebar_items', $this->sidebar);
     }
 
     /**
@@ -40,8 +65,11 @@ class ApiUsersController extends \Controller {
      */
     public function view($id = 0)
     {
-        $apiuser = ApiUser::find($id);
-        return View::make('sharedsettings::admin.apiuser.view', array('apiuser' => $apiuser))->with('sidebar_items', $this->sidebar);
+        $apiuser = $this->apiuser->find($id);
+        $model = new ApiUserViewModel();
+        $model->init($apiuser);
+        return View::make('sharedsettings::admin.apiuser.view', array('model' => $model))
+            ->with('sidebar_items', $this->sidebar);
     }
 
     /**
@@ -52,14 +80,20 @@ class ApiUsersController extends \Controller {
      */
     public function edit($id = 0)
     {
-        $apiuser = $id ? ApiUser::find($id) : new ApiUser();
+        $apiuser = $this->apiuser->find($id);
+        $model = new ApiUserViewModel();
+        $model->init($apiuser);
         $permission_values_tmp = array();
-        $permission_values = Data::all();
+        $permission_values = $this->data->all(10000);
         $user_data_codes = array();
+        $apiuser_data = $model->permissions;
 
-        foreach($apiuser->data as $v)
+        if($apiuser)
         {
-            $user_data_codes[] = $v->code;
+            foreach($apiuser->data as $v)
+            {
+                $user_data_codes[] = $v->code;
+            }
         }
 
         foreach($permission_values as $v)
@@ -68,9 +102,14 @@ class ApiUsersController extends \Controller {
                 $permission_values_tmp[$v->id] = sprintf('[%s] %s', $v->code, $v->title);
         }
 
-        return View::make('sharedsettings::admin.apiuser.edit', array('apiuser' => $apiuser,
-                                                      'permission_values' => $permission_values_tmp,
-                                                      'user_acl' => $apiuser->data))
+        $permModel = new ApiUserPermissionsViewModel();
+        $permModel->api_user_id = $model->id;
+        $permModel->api_user_permissions = $apiuser_data;
+        $permModel->available_permissions = $permission_values_tmp;
+
+        return View::make('sharedsettings::admin.apiuser.edit',
+            array('model' => $model,
+                  'perm_model' => $permModel))
             ->with('sidebar_items', $this->sidebar);
     }
 
@@ -81,61 +120,32 @@ class ApiUsersController extends \Controller {
      */
     public function save()
     {
-        $validator = Validator::make(Input::all(), ApiUser::$rules);
+        $validator = $this->apiuser->validate(Input::all());
 
-        if ($validator->fails())
-        {
+        if ($validator)
             return Redirect::back()
                 ->withErrors($validator)
                 ->withInput();
-        }
-
-        $id = Input::get('id');
-        $description = Input::get('description');
-        $callback_url = Input::get('callback_url');
-        $address = Input::get('address');
-        $username = Input::get('username');
-        $secret = Input::get('secret');
-        $active = (int) Input::get('active');
 
         //Edit
-        if($id)
+        if(Input::has('id'))
         {
-            $apiuser = ApiUser::find($id);
-            $apiuser->active = $active;
-            $apiuser->description = $description;
-            $apiuser->username = $username;
-            if(!empty($secret) &&
-                ($apiuser->secret != md5($secret) && $apiuser->secret != $secret))
-                $apiuser->secret = md5($secret);
-            $apiuser->callback_url = $callback_url;
-            $apiuser->address = $address;
-            $apiuser->modified_by = App::make('authenticator')->getLoggedUser()->id;
-            $apiuser->save();
+            $id = Input::get('id');
+            $this->apiuser->save(Input::all());
         }
         //New
         else
         {
-            $userExists = ApiUser::where('username', '=', $username)->count();
+            $userExists = $this->apiuser->findByUsername(Input::get('username'));
+
             if($userExists)
             {
                 return Redirect::back()
-                    ->withErrors(array('Username already in use! Please choose a different username and try again.'))
+                    ->withErrors(array('Username is already in use! Please choose a different username and try again.'))
                     ->withInput();
             }
 
-            $apiuser = new ApiUser;
-            $apiuser->active = $active;
-            $apiuser->description = $description;
-            $apiuser->username = $username;
-            $apiuser->secret = $secret ? md5($secret) : '';
-            $apiuser->callback_url = $callback_url;
-            $apiuser->address = $address;
-            $apiuser->created_by = App::make('authenticator')->getLoggedUser()->id;
-            $apiuser->modified_by = App::make('authenticator')->getLoggedUser()->id;
-            $apiuser->save();
-
-            $id = $apiuser->id;
+            $id = $this->apiuser->create(Input::all());
         }
 
         return Redirect::route('apiuser.edit', array('id' => $id))->with('message', "Successfully saved!");
@@ -149,7 +159,7 @@ class ApiUsersController extends \Controller {
      */
     public function delete($id)
     {
-        $result = ApiUser::destroy($id);
+        $result = $this->apiuser->delete($id);
         $message = ($result) ? 'Deleted successfully' : 'Failed to delete';
         return Redirect::route('apiuser.list')->with('message', $message);
     }
@@ -162,19 +172,18 @@ class ApiUsersController extends \Controller {
         $message = '';
         $api_user_id = Input::get('api_user_id');
         $data_id = Input::get('data_id');
-        $apiUser = ApiUser::find($api_user_id);
 
         switch(Input::get('operation'))
         {
             //Delete
             case 0:
-                $apiUser->data()->detach($data_id);
+                $this->apiuser->removePermission($api_user_id, $data_id);
                 $message = 'Permission deleted successfully';
                 break;
 
             //Add
             case 1:
-                $apiUser->data()->attach($data_id);
+                $this->apiuser->addPermission($api_user_id, $data_id);
                 $message = 'Permission added successfully';
                 break;
         }

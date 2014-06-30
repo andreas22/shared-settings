@@ -6,13 +6,13 @@
 @stop
 
 @section('title')
-    Admin area: {{ $data->title ? $data->title : 'Data List'}}
+    Admin area: {{ $model->title ?: 'Data List'}}
 @stop
 
 @section('content')
 <div class="panel panel-info">
     <div class="panel-heading">
-        <h3 class="panel-title bariol-thin"><i class="fa fa-user"></i> {{ $data->id ? 'Edit' : 'Add new' }} </h3>
+        <h3 class="panel-title bariol-thin"><i class="fa fa-user"></i> {{ $model->id ? 'Edit' : 'Add new' }} </h3>
     </div>
     <div class="panel-body">
         <div class="row">
@@ -30,14 +30,14 @@
                 @endif
 
                 {{Form::open(array('route' => 'data.save', 'class' => 'well', 'id' => 'form')) }}
-                    {{ Form::hidden('id', $data->id) }}
+                    {{ Form::hidden('id', $model->id) }}
                     {{ Form::hidden('content', '', array('id' => 'content')) }}
 
-                    {{ Form::hidden('code', $data->code, array('id' => 'code')) }}
+                    {{ Form::hidden('code', $model->code, array('id' => 'code')) }}
 
                     <div class="form-group">
                         <div class="controls">
-                            {{ Form::checkbox('private', '1', $data->private, ['id' => 'private']) }} {{ Form::label('private', 'Is Private?') }}
+                            {{ Form::checkbox('private', '1', $model->private, ['id' => 'private']) }} {{ Form::label('private', 'Is Private?') }}
                             <h6>
                                 <small>Setting your data as private it means that it will be only accessible through api user authentication</small>
                             </h6>
@@ -47,14 +47,14 @@
                     <div class="form-group">
                         {{ Form::label('title', 'Title') }}
                         <div class="controls">
-                            {{ Form::text('title', $data->title, array('id' => 'title', 'style' => 'width: 100%', 'placeholder' => ' A clean and specific title')) }}
+                            {{ Form::text('title', $model->title, array('id' => 'title', 'style' => 'width: 100%', 'placeholder' => ' A clean and specific title')) }}
                         </div>
                     </div>
 
                     <div class="form-group">
                         {{ Form::label('description', 'Description') }}
                         <div class="controls">
-                            {{ Form::text('description', $data->description, array('id' => 'description', 'style' => 'width: 100%', 'placeholder' => ' A short description what is about')) }}
+                            {{ Form::text('description', $model->description, array('id' => 'description', 'style' => 'width: 100%', 'placeholder' => ' A short description what is about')) }}
                         </div>
                     </div>
 
@@ -71,19 +71,19 @@
             </div>
             <div class="col-md-4">
 
-                <div class="form-group" style="display: {{ $data->code == 'auto' ? 'none' : 'block'; }}">
+                <div class="form-group" style="display: {{ $model->code == 'auto' ? 'none' : 'block'; }}">
                     <div class="controls">
-                        {{ Form::text('code1', $data->code, array('style' => 'width: 100%; background: none; color: #31708f; border: 1px solid #bce8f1 !important; text-align: center; border:0; font-size: 16px;', 'readonly' => 'readonly', 'placeholder' => ' A unique code to be used for api access')) }}
+                        {{ Form::text('code1', $model->code, array('style' => 'width: 100%; background: none; color: #31708f; border: 1px solid #bce8f1 !important; text-align: center; border:0; font-size: 16px;', 'readonly' => 'readonly', 'placeholder' => ' A unique code to be used for api access')) }}
                     </div>
                 </div>
 
                 <div class="alert alert-info public-url-info" style="display: none" role="alert">
                     <h4><small>Public data can be accessed using the direct links below:</small></h4>
                     <i class="fa fa-external-link"></i>
-                    <small><a href="{{  route('api.public.get', ['code' => $data->code]) }}" target="_blank">Link 1</a></small>
+                    <small><a href="{{  route('api.public.get', ['code' => $model->code]) }}" target="_blank">Link 1</a></small>
                     <div style="text-align: center"></div>
                     <i class="fa fa-external-link"></i>
-                    <small><a href="{{  route('api.public.get', ['code' => $data->code, 'p' => 1]) }}" target="_blank">Link 2</a></small>
+                    <small><a href="{{  route('api.public.get', ['code' => $model->code, 'p' => 1]) }}" target="_blank">Link 2</a></small>
                 </div>
 
                 <h3 style="margin-top: 0;">Shortcut keys</h3>
@@ -175,7 +175,7 @@
     var editor = new JSONEditor(container, options);
     editor.setName('Test');
 
-    var json = {{ strlen($data->content) }} > 0 ? {{ $data->content }} : '';
+    var json = {{ $model->content }};
     editor.set(json);
 
     $(document).ready(function(){

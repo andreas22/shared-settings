@@ -1,13 +1,13 @@
 @extends('laravel-authentication-acl::admin.layouts.base-2cols')
 
 @section('title')
-    Admin area | API User ({{ $apiuser->username ? $apiuser->username : 'New'}})
+    Admin area | API User ({{ $model->username ? $model->username : 'New'}})
 @stop
 
 @section('content')
 <div class="panel panel-info">
     <div class="panel-heading">
-        <h3 class="panel-title bariol-thin"><i class="fa fa-user"></i> {{ $apiuser->id ? 'Edit' : 'Add new' }} </h3>
+        <h3 class="panel-title bariol-thin"><i class="fa fa-user"></i> {{ $model->id ? 'Edit' : 'Add new' }} </h3>
     </div>
     <div class="panel-body">
         <div class="row">
@@ -25,39 +25,39 @@
                 @endif
 
                 {{Form::open(array('route' => 'apiuser.save', 'class' => 'well', 'id' => 'form')) }}
-                    {{ Form::hidden('id', $apiuser->id) }}
+                    {{ Form::hidden('id', $model->id) }}
 
                     <div class="form-group">
                         <div class="controls">
-                            {{ Form::checkbox('active', '1', $apiuser->active, ['id' => 'active']) }} {{ Form::label('active', 'Active') }}
+                            {{ Form::checkbox('active', '1', $model->active, ['id' => 'active']) }} {{ Form::label('active', 'Active') }}
                         </div>
                     </div>
 
                     <div class="form-group">
                         {{ Form::label('username', 'Username') }}
                         <div class="controls">
-                            {{ Form::text('username', $apiuser->username, array('id' => 'username', 'style' => 'width: 100%', 'placeholder' => ' Username used by API to authenticate the user')) }}
+                            {{ Form::text('username', $model->username, array('id' => 'username', 'style' => 'width: 100%', 'placeholder' => ' Username used by API to authenticate the user')) }}
                         </div>
                     </div>
 
                     <div class="form-group">
                         {{ Form::label('secret', 'Secret') }}
                         <div class="controls">
-                            <input type="password" name="secret" value="{{ $apiuser->secret }}" style="width: 100%" placeholder=" Secret used by API to authenticate the user">
+                            <input type="password" name="secret" value="{{ $model->secret }}" style="width: 100%" placeholder=" Secret used by API to authenticate the user">
                         </div>
                     </div>
 
                     <div class="form-group">
                         {{ Form::label('description', 'Description') }}
                         <div class="controls">
-                            {{ Form::text('description', $apiuser->description, array('id' => 'description', 'style' => 'width: 100%', 'placeholder' => ' A short description for the API user')) }}
+                            {{ Form::text('description', $model->description, array('id' => 'description', 'style' => 'width: 100%', 'placeholder' => ' A short description for the API user')) }}
                         </div>
                     </div>
 
                     <div class="form-group">
                         {{ Form::label('callback_url', 'Callback Url') }}
                         <div class="controls">
-                            {{ Form::text('callback_url', $apiuser->callback_url, array('id' => 'callback_url', 'style' => 'width: 100%', 'placeholder' => ' A callback url to be called upon data changes')) }}
+                            {{ Form::text('callback_url', $model->callback_url, array('id' => 'callback_url', 'style' => 'width: 100%', 'placeholder' => ' A callback url to be called upon data changes')) }}
                             <h6><small>Example: http://www.example.com/index.php</small></h6>
                         </div>
                     </div>
@@ -65,7 +65,7 @@
                     <div class="form-group">
                         {{ Form::label('address', 'Address') }}
                         <div class="controls">
-                            {{ Form::text('address', $apiuser->address, array('id' => 'address', 'style' => 'width: 100%', 'placeholder' => ' The ip address that will access API')) }}
+                            {{ Form::text('address', $model->address, array('id' => 'address', 'style' => 'width: 100%', 'placeholder' => ' The ip address that will access API')) }}
                             <h6>
                                 <small>Example:
                                     <ul>

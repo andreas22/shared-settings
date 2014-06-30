@@ -41,24 +41,4 @@ class Data extends \Eloquent {
     {
         return $this->hasOne('User', 'id', 'modified_by');
     }
-
-    public static function viewApiUserDataByCode($code)
-    {
-        if(Data::$results == null || Data::$code != $code)
-        {
-            Data::$results = DB::table('apiuser_data')
-                                ->join('apiusers', 'apiusers.id', '=', 'apiuser_data.apiuser_id')
-                                ->join('data', 'data.id', '=', 'apiuser_data.data_id')
-                                ->select('apiusers.active', 'apiusers.address', 'apiusers.username', 'apiusers.secret', 'data.private')
-                                ->where('data.code', '=', $code)
-                                ->get();
-            Data::$code = $code;
-
-            //$queries = DB::getQueryLog();
-            //$last_query = end($queries);
-            //\Log::info($last_query['query']);
-        }
-
-        return Data::$results;
-    }
 }

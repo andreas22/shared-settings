@@ -1,13 +1,12 @@
 <?php namespace Ac\SharedSettings\Controllers\Admin;
 
-use Ac\SharedSettings\Models\Data;
-use Ac\SharedSettings\Models\ApiUser;
 use URL;
-use Validator;
 use Redirect;
 use View;
 use Input;
-use App;
+use Ac\SharedSettings\ViewModels\PaginateViewModel;
+use Ac\SharedSettings\ViewModels\DataViewModel;
+use Ac\SharedSettings\Repositories\DataRepositoryInterface;
 
 class DataController extends \Controller {
 
@@ -17,10 +16,15 @@ class DataController extends \Controller {
 
     private $total_records;
 
-    public function __construct()
-    {
-        $this->total_records = Data::all()->count();
+    /*
+     * Ac\SharedSettings\Repositories\DataRepositoryInterface
+     */
+    private $data;
 
+    public function __construct(DataRepositoryInterface $data)
+    {
+        $this->data = $data;
+        $this->total_records = $this->data->total();
         $this->sidebar = array(
             "Data List <span class=\"badge\">$this->total_records</span>" => array('url' => URL::route('data.list'), 'icon' => '<i class="fa fa-list"></i>'),
             'Add New' => array('url' => URL::route('data.new'), 'icon' => '<i class="fa fa-plus-circle"></i>'),
@@ -33,21 +37,35 @@ class DataController extends \Controller {
 	 */
 	public function index()
 	{
-        $data = Data::paginate(15);
-        return View::make('sharedsettings::admin.data.index', array('data' => $data))->with('sidebar_items', $this->sidebar);
+        $data = $this->data->all(15);
+        $model = new PaginateViewModel();
+
+        foreach($data as $d)
+        {
+            $m = new DataViewModel();
+            $m->init($d);
+            $model->add($m);
+        }
+
+        $model->links = $data->links();
+
+        return View::make('sharedsettings::admin.data.index', array('model' => $model))
+            ->with('sidebar_items', $this->sidebar);
 	}
 
     /**
      * View a data
+     *
      * @param int $id
      * @return \Illuminate\View\View
      */
     public function view($id = 0)
     {
-        $data = Data::find($id);
-        if(strlen($data->content) == 0)
-            $data->content = '{}';
-        return View::make('sharedsettings::admin.data.view', array('data' => $data))->with('sidebar_items', $this->sidebar);
+        $data = $this->data->find($id);
+        $model = new DataViewModel();
+        $model->init($data);
+        return View::make('sharedsettings::admin.data.view', array('model' => $model))
+            ->with('sidebar_items', $this->sidebar);
     }
 
 	/**
@@ -58,12 +76,12 @@ class DataController extends \Controller {
 	 */
 	public function edit($id = 0)
 	{
-        $data = $id ? Data::find($id) : new Data();
-        if(strlen($data->content) == 0)
-            $data->content = '{}';
-        if(!$id)
-            $data->code = 'auto';
-        return View::make('sharedsettings::admin.data.edit', array('data' => $data))->with('sidebar_items', $this->sidebar);
+        $data = $this->data->find($id);
+        $model = new DataViewModel();
+        $model->init($data);
+
+        return View::make('sharedsettings::admin.data.edit', array('model' => $model))
+            ->with('sidebar_items', $this->sidebar);
 	}
 
 	/**
@@ -73,56 +91,32 @@ class DataController extends \Controller {
 	 */
 	public function save()
 	{
-        $validator = Validator::make(Input::all(), Data::$rules);
+        $validator = $this->data->validate(Input::all());
 
-        if ($validator->fails())
-        {
+        if ($validator)
             return Redirect::back()
                 ->withErrors($validator)
                 ->withInput();
-        }
-
-        $id = Input::get('id');
-        $title = Input::get('title');
-        $description = Input::get('description');
-        $content = Input::get('content');
-        $code = Input::get('code');
-        $private = (int) Input::get('private');
 
         //Edit
-        if($id)
+        if(Input::has('id'))
         {
-            $data = Data::find($id);
+            $id = Input::get('id');
+            $data = $this->data->save(Input::all());
 
-            if($data->code != $code)
+            if($data == null)
             {
                 return Redirect::back()
                     ->withErrors(array('Cheating is not a good idea!'))
                     ->withInput();
             }
-
-            $data->title = $title;
-            $data->description = $description;
-            $data->content = $content;
-            $data->modified_by = App::make('authenticator')->getLoggedUser()->id;
-            $data->private = $private;
-            $data->save();
         }
         //New
         else
         {
-            $code = $this->code_prefix . date('YmdHi') . ($this->total_records + 1);
-
-            $data = new Data();
-            $data->private = $private;
-            $data->code = $code;
-            $data->title = $title;
-            $data->description = $description;
-            $data->content = $content;
-            $data->created_by = App::make('authenticator')->getLoggedUser()->id;
-            $data->modified_by = App::make('authenticator')->getLoggedUser()->id;
-            $data->save();
-            $id = $data->id;
+            $values = Input::all();
+            $values['code'] = $this->code_prefix . date('YmdHi') . ($this->total_records + 1);
+            $id = $this->data->create($values);
         }
 
         return Redirect::route('data.edit', array('id' => $id))->with('message', "Successfully saved!");
@@ -136,7 +130,7 @@ class DataController extends \Controller {
 	 */
 	public function delete($id)
 	{
-        $result = Data::destroy($id);
+        $result = $this->data->delete($id);
         $message = ($result) ? 'Deleted successfully' : 'Failed to delete';
         return Redirect::route('data.list')->with('message', $message);
 	}

@@ -30,6 +30,10 @@ class SharedsettingsServiceProvider extends ServiceProvider {
 	{
         include __DIR__.'/routes.php';
         include __DIR__.'/filters/api-filters.php';
+
+        $this->app->bind('Ac\SharedSettings\Repositories\APIUsersRepositoryInterface', 'Ac\SharedSettings\Repositories\DbAPIUsersRepository');
+        $this->app->bind('Ac\SharedSettings\Repositories\DataRepositoryInterface', 'Ac\SharedSettings\Repositories\DbDataRepository');
+        $this->app->bind('Ac\SharedSettings\Repositories\APIFiltersRepositoryInterface', 'Ac\SharedSettings\Repositories\APIFiltersRepository');
 	}
 
 	/**
