@@ -6,7 +6,7 @@ interface APIFiltersRepositoryInterface
      * Check if given coded exists
      *
      * @param $code
-     * @return json 200 on success, 404 for invalid code
+     * @return json 302 if found, 404 for invalid code
      */
     public function validateIfDataCodeExists($code);
 
@@ -14,7 +14,7 @@ interface APIFiltersRepositoryInterface
      * Check if given coded are private
      *
      * @param $code
-     * @return json 200 on success, 403 for private data
+     * @return json 302 if found, 403 for private data
      */
     public function validateIfDataIsPrivate($code);
 
@@ -29,7 +29,7 @@ interface APIFiltersRepositoryInterface
      *
      * @param $username
      * @param $ip
-     * @return json 200 on success, 403 for invalid ip
+     * @return json 302 if found, 403 for invalid ip
      */
     public function validateIfIncomingIPAllowed($username, $ip);
 
@@ -37,7 +37,7 @@ interface APIFiltersRepositoryInterface
      * Check if given username is active
      *
      * @param $username
-     * @return json 200 on success, 403 is use is not active
+     * @return json 302 if found, 403 is use is not active
      */
     public function validateIfApiuserIsActive($username);
 
@@ -46,7 +46,7 @@ interface APIFiltersRepositoryInterface
      *
      * @param $username
      * @param $code
-     * @return json 200 on success, 403 for inefficient permissions
+     * @return json 302 if found, 403 for inefficient permissions
      */
     public function validateIfApiuserHasPermissions($username, $code);
 
@@ -55,7 +55,7 @@ interface APIFiltersRepositoryInterface
      *
      * @param $username
      * @param $secret
-     * @return json 200 on success, 404 for invalid user credentials
+     * @return json 302 if found, 404 for invalid user credentials
      */
     public function validateIfApiuserValidCredentials($username, $secret);
 } 
