@@ -26,27 +26,30 @@ class DataController extends \Controller
      */
     public function get()
     {
+        $suppress_response_codes = Input::get('suppress_response_codes');
         $data = $this->data->findByCode(Input::get('code'));
 
         if($data != null)
         {
             $content = json_decode($data->content, true);
-            $response = ['result' => [
+            $response = ['result' =>[
                             'status' => HttpCodes::HTTP_FOUND,
-                            'data' => $content]
+                            'data' => $content
+                            ]
                         ];
 
             if(Input::has('tag'))
                 $response['result']['data'] = [Input::get('tag') => ArrayHelper::getValueByKey( Input::get('tag'), $content )];
 
-            return JsonResponse::withSuccess($response);
+            return JsonResponse::withSuccess($response, $suppress_response_codes);
         }
 
-        $result = ['result' => [
-            'status' => '404',
-            'error' => 'Data cannot be found!']
+        $result = ['result' =>[
+            'status' => HttpCodes::HTTP_NOT_FOUND,
+            'error' => 'Data cannot be found!'
+            ]
         ];
 
-        return JsonResponse::withError($result, HttpCodes::HTTP_NOT_FOUND);
+        return JsonResponse::withError($result, $suppress_response_codes);
     }
 }

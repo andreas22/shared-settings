@@ -39,13 +39,13 @@ Route::group(array( 'prefix' => 'admin/sharedsettings',
 /*
  * API ROUTES
  */
-Route::group(array( 'prefix' => 'api',
+Route::group(array( 'prefix' => 'v1/api',
                     'before' => array('validate_data_code_exists')), function()
 {
     //Public Data
     Route::group(array('before' => array('api_is_private')), function()
     {
-        Route::get('get', array('as' => 'api.public.get', 'uses' => 'Ac\SharedSettings\Controllers\Api\DataController@get'));
+        Route::get('data', array('as' => 'api.public.get', 'uses' => 'Ac\SharedSettings\Controllers\Api\DataController@get'));
     });
 
     //Private Data
@@ -56,6 +56,6 @@ Route::group(array( 'prefix' => 'api',
                             'api_validate_ip'
                         )), function()
     {
-        Route::post('get', array('as' => 'api.private.get', 'uses' => 'Ac\SharedSettings\Controllers\Api\DataController@get'));
+        Route::post('data', array('as' => 'api.private.get', 'uses' => 'Ac\SharedSettings\Controllers\Api\DataController@get'));
     });
 });
