@@ -91,8 +91,27 @@
                     <small><a href="{{  route('api.public.get', ['code' => $model->code]) }}" target="_blank">Link 1</a></small>
                     <div style="text-align: center"></div>
                     <i class="fa fa-external-link"></i>
-                    <small><a href="{{  route('api.public.get', ['code' => $model->code, 'p' => 1]) }}" target="_blank">Link 2</a></small>
+                    <small><a href="{{  route('api.public.get', ['code' => $model->code, 'suppress_response_codes' => 1]) }}" target="_blank">Link 2 (with suppress response codes)</a></small>
+                    <div><h5><small>*Suppress response codes means it will return always http status 200 no matter what is the result.</small></h5></div>
                 </div>
+
+                <div style="overflow-x: scroll; width: 100%; height:290px; display: none" class="alert alert-info private-url-info">
+                    <h4><small>Copy/paste the below code in an html file to access your private data.</small></h4>
+                    <code>
+                        <small>
+                        &lt;form action="{{  route('api.public.get') }}" method="post"&gt;<br />
+                            Code: &lt;input type="text" name="code" /&gt;<br />
+                            Username: &lt;input type="text" name="username" /&gt;<br />
+                            Password: &lt;input type="password" name="secret" /&gt;<br />
+                            Suppress Response Codes: &lt;input type="text" name="suppress_response_codes" /&gt;<br />
+                            &lt;input type="submit" name="Submit" /&gt;<br />
+                        &lt;/form&gt;
+                        </small>
+                    </code>
+                    <div><h5><small>*Suppress response codes means it will return always http status 200 no matter what is the result.</small></h5></div>
+                </div>
+
+                <br />
 
                 <h3 style="margin-top: 0;">Shortcut keys</h3>
                 The editor supports shortcut keys for all available actions. The editor can be used by just a keyboard. The following short cut keys are available:
@@ -210,8 +229,10 @@
         {
             if ($($obj).is(":checked") || $('#code').val() == 'auto') {
                 $(".public-url-info").slideUp('slow');
+                $(".private-url-info").slideDown('slow');
             } else {
                 $(".public-url-info").slideDown('slow');
+                $(".private-url-info").slideUp('slow');
             }
         }
     });
