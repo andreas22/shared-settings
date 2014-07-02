@@ -1,5 +1,6 @@
 <?php namespace Ac\SharedSettings\Repositories;
 
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response as HttpCodes;
 
 class APIFiltersRepository implements APIFiltersRepositoryInterface{
@@ -23,36 +24,24 @@ class APIFiltersRepository implements APIFiltersRepositoryInterface{
      * Check if given coded exists
      *
      * @param $code
-     * @return json 302 if found, 404 for invalid code
+     * @return bool
      */
     public function validateIfDataCodeExists($code)
     {
         $result = $this->data->findByCode($code);
-
-        if(empty($result))
-            return ['result' => [
-                'status' => HttpCodes::HTTP_NOT_FOUND,
-                'error' => 'Invalid code request!']
-            ];
-        return ['result' => ['status' => HttpCodes::HTTP_FOUND]];
+        return empty($result) ? false : true;
     }
 
     /**
      * Check if given coded are private
      *
      * @param $code
-     * @return json 302 if found, 403 for private data
+     * @return bool
      */
     public function validateIfDataIsPrivate($code)
     {
         $result = $this->data->findByCode($code);
-
-        if($result->private)
-            return ['result' => [
-                'status' => HttpCodes::HTTP_FORBIDDEN,
-                'error' => 'Data are private, permission is deny!']
-            ];
-        return ['result' => ['status' => HttpCodes::HTTP_FOUND]];
+        return $result->private ? true : false;
     }
 
     /**
@@ -60,55 +49,45 @@ class APIFiltersRepository implements APIFiltersRepositoryInterface{
      *
      * @param $username
      * @param $ip
-     * @return json 302 if found, 403 for invalid ip
+     * @return bool
      */
     public function validateIfIncomingIPAllowed($username, $ip)
     {
-        $found = false;
         $result = $this->apiuser->findByUsername($username);
 
-        if( $result->address == $ip /*Exact match*/ ||
-            strstr($result->address, $ip) /*In a list*/ ||
-            $result->address == '*' /*Any ip is allowed*/)
+        if(!empty($result))
         {
-            $found = true;
-        }
-        /*Inside a given range*/
-        elseif(strstr($result->address, '-'))
-        {
-            $ip = ip2long($ip);
-            $ip_range = explode('-', $result->address);
-            $from = ip2long($ip_range[0]);
-            $to = ip2long($ip_range[1]);
+            if($result->address == $ip /*Exact match*/ ||
+                strstr($result->address, $ip) /*In a list*/ ||
+                $result->address == '*' /*Any ip is allowed*/)
+            {
+                return true;
+            }
+            /*Inside a given range*/
+            elseif(strstr($result->address, '-'))
+            {
+                $ip = ip2long($ip);
+                $ip_range = explode('-', $result->address);
+                $from = ip2long($ip_range[0]);
+                $to = ip2long($ip_range[1]);
 
-            if($ip >= $from && $ip <= $to)
-                $found = true;
+                if($ip >= $from && $ip <= $to)
+                    return true;
+            }
         }
-
-        if(!$found)
-            return ['result' => [
-                'status' => HttpCodes::HTTP_FORBIDDEN,
-                'error' => 'Invalid IP address!']
-            ];
-        return ['result' => ['status' => HttpCodes::HTTP_FOUND]];
+        return false;
     }
 
     /**
      * Check if given username is active
      *
      * @param $username
-     * @return json 302 if found, 403 is use is not active
+     * @return bool
      */
     public function validateIfApiuserIsActive($username)
     {
         $result = $this->apiuser->findByUsername($username);
-
-        if(!$result->active)
-            return ['result' => [
-                'status' => HttpCodes::HTTP_FORBIDDEN,
-                'error' => 'API user is not active!']
-            ];
-        return ['result' => ['status' => HttpCodes::HTTP_FOUND]];
+        return !$result->active ? false : true;
     }
 
     /**
@@ -116,7 +95,7 @@ class APIFiltersRepository implements APIFiltersRepositoryInterface{
      *
      * @param $username
      * @param $code
-     * @return json 302 if found, 403 for inefficient permissions
+     * @return bool
      */
     public function validateIfApiuserHasPermissions($username, $code)
     {
@@ -124,13 +103,9 @@ class APIFiltersRepository implements APIFiltersRepositoryInterface{
         foreach($result as $value)
         {
             if(strcmp($code, $value->code) == 0)
-                return ['result' => ['status' => HttpCodes::HTTP_FOUND]];
+                return true;
         }
-
-        return ['result' => [
-            'status' => HttpCodes::HTTP_FORBIDDEN,
-            'error' => 'Inefficient permissions!']
-        ];
+        return false;
     }
 
     /**
@@ -138,19 +113,12 @@ class APIFiltersRepository implements APIFiltersRepositoryInterface{
      *
      * @param $username
      * @param $secret
-     * @return json 302 if found, 404 for invalid user credentials
+     * @return bool
      */
     public function validateIfApiuserValidCredentials($username, $secret)
     {
         $result = $this->apiuser->findByUsername($username);
         $secret_md5 = md5($secret);
-
-        if(empty($result) || strcmp($result->secret, $secret_md5) != 0)
-            return ['result' => [
-                'status' => HttpCodes::HTTP_FORBIDDEN,
-                'data' => null,
-                'error' => 'Invalid credentials!']
-            ];
-        return ['result' => ['status' => HttpCodes::HTTP_FOUND]];
+        return (empty($result) || strcmp($result->secret, $secret_md5) != 0) ? false : true;
     }
 }
