@@ -30,6 +30,7 @@ class DbNotificationsRepository implements NotificationsRepositoryInterface
         $model->data_id = $data_id;
         $model->created_by = $created_by;
         $model->modified_by = $created_by;
+        $model->recipients = "";
         $model->save();
         return $model->id;
     }
@@ -71,12 +72,15 @@ class DbNotificationsRepository implements NotificationsRepositoryInterface
                     $ch = curl_init();
                     curl_setopt($ch, CURLOPT_URL, $recipient->callback_url);
                     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 0);
+                    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
                     curl_exec($ch);
+                    $status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                    $status = $status_code == 302 ? 1 : 0;
                     curl_close($ch);
                 }
             }
 
-            $this->save($id, 1, json_encode($recipients_list), $logged_in_user);
+            $this->save($id, $status, json_encode($recipients_list), $logged_in_user);
         }
     }
 

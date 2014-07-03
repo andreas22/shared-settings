@@ -67,7 +67,7 @@
                     </div>
 
                     {{ Form::button('Save', array('class'=>'btn btn-info', 'id' => 'save')) }}
-                    @if(!empty($model->id))
+                    @if(!empty($model->id) && $model->apiusers->count() > 0)
                         {{ Form::button('Save & Notify', array('class'=>'btn btn-warning', 'id' => 'notify')) }}
                     @endif
                     <a href="{{ URL::route('data.list') }}" class="btn btn-info">Return</a>

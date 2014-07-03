@@ -16,6 +16,7 @@ class DataViewModel
     public $created_by_email;
     public $modified_by_email;
     public $hasPendingNotifications;
+    public $apiusers;
 
     public function init(\Ac\SharedSettings\Models\Data $data = null)
     {
@@ -34,6 +35,8 @@ class DataViewModel
             $this->updated_at = $data->updated_at;
             $this->created_by_email = $data->createdBy->email;
             $this->modified_by_email = $data->modifiedBy->email;
+            $this->apiusers = $data->apiusers;
+
         }
         else
         {

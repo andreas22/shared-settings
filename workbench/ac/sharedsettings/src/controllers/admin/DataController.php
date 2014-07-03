@@ -87,7 +87,13 @@ class DataController extends \Controller {
         $data = $this->data->find($id);
         $model = new DataViewModel();
         $model->init($data);
-        $model->hasPendingNotifications = $this->notifications->hasPendingNotification($id);
+
+        if($id)
+        {
+            $allowed_users = $this->data->getApiUsersAllowed($data->code);
+            if($allowed_users)
+                $model->hasPendingNotifications = $this->notifications->hasPendingNotification($id);
+        }
 
         return View::make('sharedsettings::admin.data.edit', array('model' => $model))
             ->with('sidebar_items', $this->sidebar);
@@ -113,10 +119,16 @@ class DataController extends \Controller {
             $id = Input::get('id');
             $data = $this->data->save(Input::all());
             $created_by = App::make('authenticator')->getLoggedUser()->id;
-            $notification_id = $this->notifications->create($id, $created_by, date('Y-m-d H:i:s'));
+            $allowed_users = $this->data->getApiUsersAllowed(Input::get('code'));
 
-            if(Input::get('send_notification'))
-                $this->notifications->send($notification_id, $created_by);
+            if($allowed_users)
+            {
+                $notification_id = $this->notifications->create($id, $created_by, date('Y-m-d H:i:s'));
+
+                if(Input::get('send_notification')){
+                    $this->notifications->send($notification_id, $created_by);
+                }
+            }
 
             if($data == null)
                 return Redirect::back()
