@@ -1,5 +1,6 @@
 <?php namespace Ac\SharedSettings\Controllers\Admin;
 
+use App;
 use URL;
 use Redirect;
 use View;
@@ -130,8 +131,12 @@ class ApiUsersController extends \Controller {
         //Edit
         if(Input::has('id'))
         {
+            $params = [];
+            $params['modified_by'] = App::make('authenticator')->getLoggedUser()->id;
+            $params += Input::all();
+
             $id = Input::get('id');
-            $this->apiuser->save(Input::all());
+            $this->apiuser->save($params);
         }
         //New
         else
@@ -145,7 +150,11 @@ class ApiUsersController extends \Controller {
                     ->withInput();
             }
 
-            $id = $this->apiuser->create(Input::all());
+            $params = [];
+            $params['created_by'] = App::make('authenticator')->getLoggedUser()->id;
+            $params['modified_by'] = App::make('authenticator')->getLoggedUser()->id;
+            $params += Input::all();
+            $id = $this->apiuser->create($params);
         }
 
         return Redirect::route('apiuser.edit', array('id' => $id))->with('message', "Successfully saved!");

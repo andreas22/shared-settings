@@ -54,8 +54,8 @@ class DbDataRepository implements DataRepositoryInterface
         $data->title = isset($values['title']) ? $values['title'] : '';
         $data->description = isset($values['description']) ? $values['description'] : '';
         $data->content = isset($values['content']) ? $values['content'] : '{}';
-        $data->created_by = App::make('authenticator')->getLoggedUser()->id;
-        $data->modified_by = App::make('authenticator')->getLoggedUser()->id;
+        $data->created_by = $values['created_by'];
+        $data->modified_by = $values['modified_by'];
         $data->save();
         return $data->id;
     }
@@ -76,7 +76,7 @@ class DbDataRepository implements DataRepositoryInterface
         $data->title = isset($values['title']) ? $values['title'] : '';
         $data->description = isset($values['description']) ? $values['description'] : '';
         $data->content = isset($values['content']) ? $values['content'] : '{}';
-        $data->modified_by = App::make('authenticator')->getLoggedUser()->id;
+        $data->modified_by = $values['modified_by'];
         $data->private = isset($values['private']) ? $values['private'] : 0;
         $data->save();
         return $data;

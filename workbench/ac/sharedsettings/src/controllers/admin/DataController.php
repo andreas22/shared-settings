@@ -92,7 +92,11 @@ class DataController extends \Controller {
         {
             $allowed_users = $this->data->getApiUsersAllowed($data->code);
             if($allowed_users)
-                $model->hasPendingNotifications = $this->notifications->hasPendingNotification($id);
+            {
+                $hasPendingNotifications = $this->notifications->hasPendingNotification($id);
+                if($hasPendingNotifications)
+                    $model->hasPendingNotifications = $hasPendingNotifications->updated_at;
+            }
         }
 
         return View::make('sharedsettings::admin.data.edit', array('model' => $model))
@@ -117,7 +121,11 @@ class DataController extends \Controller {
         if(Input::has('id'))
         {
             $id = Input::get('id');
-            $data = $this->data->save(Input::all());
+            $values = [];
+            $values += Input::all();
+            $values['modified_by'] = App::make('authenticator')->getLoggedUser()->id;
+
+            $data = $this->data->save($values);
             $created_by = App::make('authenticator')->getLoggedUser()->id;
             $allowed_users = $this->data->getApiUsersAllowed(Input::get('code'));
 
@@ -140,6 +148,8 @@ class DataController extends \Controller {
         {
             $values = Input::all();
             $values['code'] = $this->code_prefix . date('YmdHi') . ($this->total_records + 1);
+            $values['created_by'] = App::make('authenticator')->getLoggedUser()->id;
+            $values['modified_by'] = App::make('authenticator')->getLoggedUser()->id;
             $id = $this->data->create($values);
         }
 

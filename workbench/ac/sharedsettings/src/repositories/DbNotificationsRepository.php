@@ -1,8 +1,6 @@
 <?php namespace Ac\SharedSettings\Repositories;
 
 use Ac\SharedSettings\Models\Notification;
-use Ac\SharedSettings\Repositories\DataRepositoryInterface;
-use Log;
 
 class DbNotificationsRepository implements NotificationsRepositoryInterface
 {
@@ -66,21 +64,22 @@ class DbNotificationsRepository implements NotificationsRepositoryInterface
                 if(!empty($recipient->callback_url) &&
                     $recipient->active == 1)
                 {
-                    $recipients_list[] = ['apiuser_id' => $recipient->apiuser_id,
-                                          'callback_url' => $recipient->callback_url];
-
                     $ch = curl_init();
                     curl_setopt($ch, CURLOPT_URL, $recipient->callback_url);
                     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 0);
                     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
                     curl_exec($ch);
                     $status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-                    $status = $status_code == 302 ? 1 : 0;
                     curl_close($ch);
+
+                    $recipients_list[] = ['apiuser_id' => $recipient->apiuser_id,
+                                          'callback_url' => $recipient->callback_url,
+                                          'send' => $status_code
+                    ];
                 }
             }
 
-            $this->save($id, $status, json_encode($recipients_list), $logged_in_user);
+            $this->save($id, 1, json_encode($recipients_list), $logged_in_user);
         }
     }
 
@@ -97,7 +96,7 @@ class DbNotificationsRepository implements NotificationsRepositoryInterface
             ->first();
 
         if(!empty($notification) && $notification->sent == 0)
-            return $notification->updated_at;
+            return $notification;
         return false;
     }
 }

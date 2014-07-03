@@ -53,8 +53,8 @@ class DbAPIUsersRepository implements APIUsersRepositoryInterface {
         $apiuser->secret = isset($values['secret']) && !empty($values['secret']) ? md5($values['secret']) : '';
         $apiuser->callback_url = isset($values['callback_url']) ? $values['callback_url'] : '';
         $apiuser->address = isset($values['address']) ? $values['address'] : '';
-        $apiuser->created_by = App::make('authenticator')->getLoggedUser()->id;
-        $apiuser->modified_by = App::make('authenticator')->getLoggedUser()->id;
+        $apiuser->created_by = $values['created_by'];
+        $apiuser->modified_by = $values['modified_by'];
         $apiuser->save();
         return $apiuser->id;
     }
@@ -68,7 +68,7 @@ class DbAPIUsersRepository implements APIUsersRepositoryInterface {
     public function save($values)
     {
         $apiuser = ApiUser::find($values['id']);
-        $apiuser->active = isset($values['active']) ? 1 : 0;
+        $apiuser->active = isset($values['active']) && $values['active'] ? 1 : 0;
         $apiuser->description = isset($values['description']) ? $values['description'] : '';
         $apiuser->username = isset($values['username']) ? $values['username'] : '';
         if(isset($values['secret']) && !empty($values['secret']) &&
@@ -76,7 +76,7 @@ class DbAPIUsersRepository implements APIUsersRepositoryInterface {
             $apiuser->secret = md5($values['secret']);
         $apiuser->callback_url = isset($values['callback_url']) ? $values['callback_url'] : '';
         $apiuser->address = isset($values['address']) ? $values['address'] : '';
-        $apiuser->modified_by = App::make('authenticator')->getLoggedUser()->id;
+        $apiuser->modified_by = $values['modified_by'];
         $apiuser->save();
         return $apiuser;
     }
