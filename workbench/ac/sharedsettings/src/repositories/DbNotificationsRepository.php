@@ -72,6 +72,8 @@ class DbNotificationsRepository implements NotificationsRepositoryInterface
                     curl_setopt($ch, CURLOPT_URL, $callback_url);
                     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 0);
                     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+                    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+                    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
                     curl_exec($ch);
                     $status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
                     curl_close($ch);
