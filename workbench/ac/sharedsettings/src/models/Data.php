@@ -29,7 +29,7 @@ class Data extends \Eloquent {
 
     public function apiusers()
     {
-        return $this->belongsToMany('Ac\SharedSettings\Models\ApiUser', 'apiuser_data', 'apiuser_id', 'data_id');
+        return $this->belongsToMany('Ac\SharedSettings\Models\ApiUser', 'apiuser_data', 'data_id', 'apiuser_id');
     }
 
     public function createdBy()
