@@ -64,8 +64,12 @@ class DbNotificationsRepository implements NotificationsRepositoryInterface
                 if(!empty($recipient->callback_url) &&
                     $recipient->active == 1)
                 {
+                    $params = strstr($recipient->callback_url, '?') ? '&' : '?';
+                    $params .= "code=" . $data->code;
+                    $callback_url = $recipient->callback_url . $params;
+
                     $ch = curl_init();
-                    curl_setopt($ch, CURLOPT_URL, $recipient->callback_url);
+                    curl_setopt($ch, CURLOPT_URL, $callback_url);
                     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 0);
                     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
                     curl_exec($ch);
@@ -73,7 +77,7 @@ class DbNotificationsRepository implements NotificationsRepositoryInterface
                     curl_close($ch);
 
                     $recipients_list[] = ['apiuser_id' => $recipient->apiuser_id,
-                                          'callback_url' => $recipient->callback_url,
+                                          'callback_url' => $callback_url,
                                           'send' => $status_code
                     ];
                 }
