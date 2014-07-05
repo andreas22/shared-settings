@@ -2,6 +2,7 @@
 
 use Response;
 use Symfony\Component\HttpFoundation\Response as HttpCodes;
+use Log;
 
 class JsonResponse
 {
@@ -16,6 +17,9 @@ class JsonResponse
     {
         $status = $suppress_response_codes ? HttpCodes::HTTP_OK : $result['result']['status'];
         $error = isset($result['result']['error']) ? $result['result']['error'] : '';
+        if(isset($_REQUEST['secret']))
+            $_REQUEST['secret'] = '******';
+        Log::warning(sprintf("Status code (%s) | Real Status code (%s) | Error (%s) | Request: (%s)", $status, $result['result']['status'], $error, json_encode($_REQUEST)));
         return Response::json(['response_code' => $result['result']['status'],
                                'message' => $error],$status);
     }
@@ -31,6 +35,9 @@ class JsonResponse
     {
         $status = $suppress_response_codes ? HttpCodes::HTTP_OK : $result['result']['status'];
         $data = isset($result['result']['data']) ? $result['result']['data'] : '';
+        if(isset($_REQUEST['secret']))
+            $_REQUEST['secret'] = '******';
+        Log::info(sprintf("Status code (%s) | Real Status code (%s) | Request: (%s)", $status, $result['result']['status'], json_encode($_REQUEST)));
         return Response::json($data, $status);
     }
 } 
